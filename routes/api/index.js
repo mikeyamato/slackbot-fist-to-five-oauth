@@ -1,32 +1,54 @@
 const slackEventsApi = require('@slack/events-api');
+const SlackClient = require('@slack/client').WebClient;
 const express = require('express');
 const router = express.Router();
 const passport = require('passport'); 
 const keys = require('../../config/keys')
 
 
-
 // *** Initialize event adapter using signing secret from environment variables ***
 const slackEvents = slackEventsApi.createEventAdapter(keys.tokenSlackSigningSecret, {
-  includeBody: true
+	includeBody: true
 });
+
+
+// Initialize a data structures to store team authorization info (typically stored in a database)
+const botAuthorizations = {}
+
+// Helpers to cache and lookup appropriate client
+// NOTE: Not enterprise-ready. if the event was triggered inside a shared channel, this lookup
+// could fail but there might be a suitable client from one of the other teams that is within that
+// shared channel.
+const clients = {};
+function getClientByTeamId(teamId) {
+  if (!clients[teamId] && botAuthorizations[teamId]) {
+    clients[teamId] = new SlackClient(botAuthorizations[teamId]);
+  }	
+  if (clients[teamId]) {
+    return clients[teamId];
+  }	
+  return null;
+}	
 
 
 // Plug the Add to Slack (OAuth) helpers into the express app
 
 
-/**
-|--------------------------------------------------
-| initially run this only in order to verify "event subscriptions" for a workspace app
-|--------------------------------------------------
-*/
+
 router.post('/', (req, res, next) => {
-	console.log('**** req.body', req.body)
-	res.status(200).send(
-		{
-			"text": req.body.challenge 
-		}
-	)
+	/**
+	|--------------------------------------------------
+	| initially run this only in order to verify "event subscriptions" for a workspace app
+	|--------------------------------------------------
+	*/
+	
+	// console.log('**** req.body', req.body)
+	// res.status(200).send(
+	// 	{
+	// 		"text": req.body.challenge 
+	// 	}
+	// )
+	
 })
 
 

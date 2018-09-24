@@ -11,7 +11,10 @@ const app = express();
 const keys = require('./config/keys')
 const index = require('./routes/api');
 
-
+// *** Initialize event adapter using signing secret from environment variables ***
+const slackEvents = slackEventsApi.createEventAdapter(keys.tokenSlackSigningSecret, {
+  includeBody: true
+});
 
 // Initialize a data structures to store team authorization info (typically stored in a database)
 const botAuthorizations = {}
@@ -64,7 +67,8 @@ app.get('/auth/slack/callback',
 */
 
 // *** Plug the event adapter into the express app as middleware ***
-app.use('/api/index', index);
+// ⚠️ As of v2.0.0, the Events API adapter parses raw request bodies while performing request signing verification. This means apps no longer need to use body-parser middleware to parse JSON-encoded requests. https://github.com/slackapi/node-slack-events-api
+app.use('/api/index', slackEvents.expressMiddleware(index));
 
 
 

@@ -11,10 +11,7 @@ const app = express();
 const keys = require('./config/keys')
 const index = require('./routes/api');
 
-// *** Initialize event adapter using signing secret from environment variables ***
-const slackEvents = slackEventsApi.createEventAdapter(keys.tokenSlackSigningSecret, {
-  includeBody: true
-});
+
 
 // Initialize a data structures to store team authorization info (typically stored in a database)
 const botAuthorizations = {}
@@ -67,7 +64,7 @@ app.get('/auth/slack/callback',
 */
 
 // *** Plug the event adapter into the express app as middleware ***
-app.use('/api/index', slackEvents.expressMiddleware(index));
+app.use('/api/index', index);
 
 
 

@@ -1,7 +1,15 @@
+const slackEventsApi = require('@slack/events-api');
 const express = require('express');
 const router = express.Router();
 const passport = require('passport'); 
+const keys = require('./config/keys')
 
+
+
+// *** Initialize event adapter using signing secret from environment variables ***
+const slackEvents = slackEventsApi.createEventAdapter(keys.tokenSlackSigningSecret, {
+  includeBody: true
+});
 
 
 // Plug the Add to Slack (OAuth) helpers into the express app

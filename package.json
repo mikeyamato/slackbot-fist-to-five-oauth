@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/mikeyamato/slackbot-fist-to-five-oauth#readme",
   "dependencies": {
+    "@aoberoi/passport-slack": "^1.0.5",
     "@slack/client": "^4.6.0",
     "@slack/events-api": "^2.1.0",
     "@slack/interactive-messages": "^1.0.1",

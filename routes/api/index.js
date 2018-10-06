@@ -8,7 +8,7 @@ const keys = require('../../config/keys')
 
 
 // *** Initialize event adapter using signing secret from environment variables ***
-const slackEvents = slackEventsApi.createEventAdapter(keys.tokenSlackSigningSecret, {
+const slackEvents = slackEventsApi.createEventAdapter(keys.slackSigningSecret, {
 	includeBody: true
 });
 
@@ -39,7 +39,8 @@ function getClientByTeamId(teamId) {
 router.post('/', (req, res, next) => {
 	/**
 	|--------------------------------------------------
-	| initially run this only in order to verify "event subscriptions" for a workspace app
+  | NOTE: only run this initially to verify slack "event subscriptions" for a 
+  | workspace app
 	|--------------------------------------------------
 	*/
 	
@@ -56,16 +57,18 @@ router.post('/', (req, res, next) => {
 router.get('/', (req, res) => {
   res.send('<a href="/auth/slack"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>');
 });
+
+
 router.get('/auth/slack', passport.authenticate('slack', {
-  scope: ['bot']
 }));
+
 router.get('/auth/slack/callback',
   passport.authenticate('slack', { session: false }),
   (req, res) => {
-    res.send('<p>Greet and React was successfully installed on your team.</p>');
+    res.send(console.log('works'));
   },
   (err, req, res, next) => {
-    res.status(500).send(`<p>Greet and React failed to install</p> <pre>${err}</pre>`);
+    res.status(500).send(console.log(`${err}`));
   }
 );
 

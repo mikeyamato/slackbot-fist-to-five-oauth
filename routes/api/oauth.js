@@ -117,7 +117,9 @@ router.post('/', passport.authenticate('slack', {session: false }), (req, res) =
 
 
 	// hit this with initial slack command
-	if(requestType.command === '/fist-to-five' && requestType.text === ''){
+	// if(requestType.command === '/fist-to-five' && requestType.text === ''){
+  if(requestType.command === '/fist-oauth' && requestType.text === ''){
+
 
 		// send survey out
 		res.status(200).send(

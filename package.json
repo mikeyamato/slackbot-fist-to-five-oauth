@@ -24,6 +24,7 @@
     "@slack/interactive-messages": "^1.0.1",
     "express": "^4.16.3",
     "passport": "^0.4.0",
-    "passport-slack": "0.0.7"
+    "passport-slack": "0.0.7",
+    "request": "^2.88.0"
   }
 }

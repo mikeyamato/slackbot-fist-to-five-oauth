@@ -124,9 +124,11 @@ router.post('/', (req, res) => {
 	// hit this with initial slack command
 	if(requestType.command === '/fist-oauth' && requestType.text === ''){     // TODO: update path to correct one
 
+    console.log(surveyQ)
+    
 		// send survey out
 		res.status(200).send(
-			surveyQ
+      surveyQ
 			// surveyToClass()
 		)
 	} else {

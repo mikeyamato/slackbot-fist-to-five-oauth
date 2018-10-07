@@ -16,8 +16,8 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 
-// Plug the Add to Slack (OAuth) helpers into the express app
-app.use(passport.initialize());
+// // Plug the Add to Slack (OAuth) helpers into the express app
+// app.use(passport.initialize());
 
 // require('./config/passport')(passport);
 

@@ -4,6 +4,7 @@ const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const favicon = require('serve-favicon');
 
 // const keys = require('./config/keys')
 // const index = require('./routes/api');
@@ -40,6 +41,8 @@ if(process.env.NODE_ENV === 'production'){
 		res.sendFile(path.resolve(__dirname,'client', 'index.html'));  // for any route that hits load `index.html`
 	})
 }
+
+app.use(favicon(path.join(__dirname, 'client', 'favicon.ico')));
 
 // Start the express application
 const port = process.env.PORT || 5000;

@@ -70,7 +70,8 @@ function oauthAccess(){
 }
 
 router.post('/slack/authorization', (req, res) => {
-  res.status(200).send(console.log(res));
+  res.status(200).send(console.log(res))
+  .catch(err => res.status(404).json(err));
 })
 
 

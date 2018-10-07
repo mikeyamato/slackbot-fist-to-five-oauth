@@ -41,9 +41,6 @@ if(process.env.NODE_ENV === 'production'){
 	})
 }
 
-// serving favicon
-app.use(path.resolve(__dirname,'client', 'favicon.ico'))
-
 // Start the express application
 const port = process.env.PORT || 5000;
 http.createServer(app).listen(port, () => {

@@ -40,7 +40,7 @@ router.get('/auth/slack/callback',
 
 function oauthAccess(){
 
-// router.post('/api/oauth.access', passport.authenticate('slack', { session: false }, (req, res) => {
+// router.post('/slack/authorization', passport.authenticate('slack', { session: false }, (req, res) => {
 
 //   const oauthAccessUrl	= 'https://slack.com/api/oauth.access';
 //   const slackClientId = '?client_id=' + slackTokenPath.slackClientId; 
@@ -68,6 +68,10 @@ function oauthAccess(){
 // }))
 
 }
+
+router.post('/slack/authorization', (req, res) => {
+  console.log(res)
+})
 
 
 // post request

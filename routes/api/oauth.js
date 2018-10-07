@@ -40,13 +40,9 @@ let channelId = '';  // this will be used for the running the survey in the appr
 
 
 router.get('/slack/authorization', (req, res) => {
-  console.log('****** hit')
-  console.log('******',req.query)
-  console.log('******',req.query.code)
-  // console.log('******',res)
-  // console.log('******',res.url)
-  // res.status(200).send(console.log(res))
-  // .catch(err => res.status(404).json(err));
+  // console.log('****** hit')
+  // console.log('******',req.query)
+  // console.log('******',req.query.code)
 
   const oauthAccess	= 'https://slack.com/api/oauth.access';
 	/***** TODO: update with different token *****/
@@ -64,9 +60,11 @@ router.get('/slack/authorization', (req, res) => {
   }
   request(postOauthAccess, function (error, response) {
 
-    console.log('############### postOauthAccess', postOauthAccess);
+    // console.log('############### postOauthAccess', postOauthAccess);
     console.log('############### error', error);
-    console.log('############### response', response.body)
+    console.log('############### response.body', response.body)
+    console.log('############### response.body.access_token', response.body.access_token)
+
     
     return;
   });

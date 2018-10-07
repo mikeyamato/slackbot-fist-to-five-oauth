@@ -20,7 +20,7 @@ $ nodemon server.js
 ```
 Set up within Slack is still required (i.e. slash command & interactive message).
 
-Note to self: command to view the log within Heroku is `heroku logs --source app`
+Note to self: command to view the log within Heroku is `heroku logs --source app` or `heroku logs --tail` (realtime). 
 
 <sub>Hosting on Heroku using the free tier may result in a slight response delay while the server spins up.</sub>
 

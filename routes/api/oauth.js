@@ -64,8 +64,9 @@ router.get('/slack/authorization', (req, res) => {
   }
   request(postOauthAccess, function (error, response) {
 
-    console.log('##############update# postOauthAccess', postOauthAccess);
-    console.log('##############update# error', error);
+    console.log('############### postOauthAccess', postOauthAccess);
+    console.log('############### error', error);
+    console.log('############### response', response)
     
     return;
   });

@@ -30,6 +30,15 @@ require('./config/passport')(passport);
 // app.use('/api/index', slackEvents.expressMiddleware(index));
 app.use('/api/oauth', oauth)
 
+// server static assets if in production
+if(process.env.NODE_ENV === 'production'){
+	// set static folder
+	app.use(express.static('client/build'));  
+
+	app.get('*', (req, res) => {
+		res.sendFile('./index.html');  // for any route that hits `client/build` load the react `index.html` file within `build`
+	})
+}
 
 // Start the express application
 const port = process.env.PORT || 5000;

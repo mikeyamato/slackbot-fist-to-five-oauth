@@ -42,7 +42,7 @@ if(process.env.NODE_ENV === 'production'){
 	})
 }
 
-app.use(favicon(path.join(__dirname, 'client', 'favicon.ico')));
+app.use(favicon(path.resolve(__dirname, 'client', 'favicon.ico')));
 
 // Start the express application
 const port = process.env.PORT || 5000;

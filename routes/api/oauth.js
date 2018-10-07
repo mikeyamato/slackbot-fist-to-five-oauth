@@ -1,6 +1,6 @@
 
 
-const passport = require('passport');
+// const passport = require('passport');
 const express = require('express');
 const request = require('request');
 const router = express.Router();
@@ -38,36 +38,6 @@ router.get('/auth/slack/callback',
   }
 );
 
-function oauthAccess(){
-
-// router.post('/slack/authorization', passport.authenticate('slack', { session: false }, (req, res) => {
-
-//   const oauthAccessUrl	= 'https://slack.com/api/oauth.access';
-//   const slackClientId = '?client_id=' + slackTokenPath.slackClientId; 
-//   const slackClientSecret = '?client_secret	=' + slackTokenPath.slackClientSecret; 
-//   const slackCode = '?code=' + TODO:????; 
-  
-	
-
-
-//   const accessTokenSwap = {
-//     url: oauthAccessUrl+slackTokenPortion+channelPortion+textPortionUpdate+attachmentsPortion+tsPortion+prettyPortion,
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/x-www-form-urlencoded',
-//     }
-//   }
-//   request(postUpdatedSurveyResults, function (error, response) {
-//     // console.log('############### response', response);
-//     // console.log('##############update# response.body', response.body);
-//     console.log('##############update# postUpdatedSurveyResults', postUpdatedSurveyResults);
-//     console.log('##############update# error', error);
-    
-//     return;
-//   });
-// }))
-
-}
 
 router.get('/slack/authorization', (req, res) => {
   console.log('****** hit')
@@ -75,6 +45,35 @@ router.get('/slack/authorization', (req, res) => {
   console.log('******',res)
   // res.status(200).send(console.log(res))
   // .catch(err => res.status(404).json(err));
+
+  // const postMessage	= 'https://slack.com/api/chat.postMessage';
+	// const updateMessage = 'https://slack.com/api/chat.update';
+	// /***** choose one or update with different token *****/
+	// 	const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotTonkotsu;   
+	// 	// const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotUclaBootcamp;  
+	// /*****************************************************/
+	// const channelPortion = `&channel=${channelId}`;  
+	// const textPortion = '&text=*Fist-to-Five Survey*';
+	// const textPortionUpdate = '&text=*Fist-to-Five Survey Updated*';
+	// const attachmentsPortion = '&attachments='+encodeURIComponent(`[{"pretext": "Results...", "text": "fist: ${fist} \n one: ${oneFinger} \n two: ${twoFingers} \n three: ${threeFingers} \n four: ${fourFingers} \n five: ${fiveFingers}"}]`);
+	// const tsPortion = '&ts=' + timestamp[0];
+	// const prettyPortion = '&pretty=1';  // no documentation availble about what this does
+  // const postUpdatedSurveyResults = {
+  //   url: updateMessage+slackTokenPortion+channelPortion+textPortionUpdate+attachmentsPortion+tsPortion+prettyPortion,
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json; charset=utf-8',
+  //   }
+  // }
+  // request(postUpdatedSurveyResults, function (error, response) {
+  //   // console.log('############### response', response);
+  //   // console.log('##############update# response.body', response.body);
+  //   console.log('##############update# postUpdatedSurveyResults', postUpdatedSurveyResults);
+  //   console.log('##############update# error', error);
+    
+  //   return;
+  // });
+
 })
 
 

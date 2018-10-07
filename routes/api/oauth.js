@@ -70,6 +70,7 @@ function oauthAccess(){
 }
 
 router.get('/slack/authorization', (req, res) => {
+  console.log('****** hit')
   console.log('******',req)
   console.log('******',res)
   // res.status(200).send(console.log(res))

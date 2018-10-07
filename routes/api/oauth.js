@@ -41,8 +41,9 @@ router.get('/auth/slack/callback',
 
 router.get('/slack/authorization', (req, res) => {
   console.log('****** hit')
-  console.log('******',req)
-  console.log('******',res)
+  console.log('******',req.query)
+  // console.log('******',res)
+  // console.log('******',res.url)
   // res.status(200).send(console.log(res))
   // .catch(err => res.status(404).json(err));
 

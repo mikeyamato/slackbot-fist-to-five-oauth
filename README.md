@@ -10,6 +10,8 @@ This application was created to randomly select a student in class using a custo
 
 ## Installation
 
+`https://slackbot-fist-to-five-oauth.herokuapp.com/`
+
 To run locally download to your local machine and run the following commands:
 
 ```sh

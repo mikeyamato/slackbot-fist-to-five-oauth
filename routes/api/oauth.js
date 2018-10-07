@@ -78,7 +78,7 @@ router.post('/slack/authorization', (req, res) => {
 
 // post request
 // posting survey form on slack
-router.post('/', passport.authenticate('slack', {session: false }), (req, res) => {
+router.post('/question', passport.authenticate('slack', {session: false }), (req, res) => {
 	const singleFoodEmoji = foodEmoji[Math.floor(Math.random() * foodEmoji.length)];
 	const requestType = req.body || null;
 	

@@ -59,11 +59,13 @@ router.get('/slack/authorization', (req, res) => {
     }
   }
   request(postOauthAccess, function (error, response) {
+    const accessTokenJSON = JSON.parse(response.body)
 
     // console.log('############### postOauthAccess', postOauthAccess);
     console.log('############### error', error);
     console.log('############### response.body', response.body)
-    console.log('############### response.body.access_token', response.body.access_token)
+    console.log('############### accessTokenJSON', accessTokenJSON)
+    console.log('############### access token', accessTokenJSON.access_token)
 
     
     return;

@@ -36,7 +36,7 @@ if(process.env.NODE_ENV === 'production'){
 	app.use(express.static('client/build'));  
 
 	app.get('*', (req, res) => {
-		res.sendFile('index.html');  // for any route that hits load `index.html`
+		res.sendFile('..\index.html');  // for any route that hits load `index.html`
 	})
 }
 

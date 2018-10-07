@@ -1,6 +1,6 @@
 
 
-const passport = require('passport');
+// const passport = require('passport');
 const express = require('express');
 const request = require('request');
 const router = express.Router();
@@ -25,18 +25,18 @@ let channelId = '';  // this will be used for the running the survey in the appr
 // TODO: add GET request to grab member names https://api.slack.com/methods/conversations.members
 
 
-// passport
-router.get('/auth/slack', passport.authenticate('slack'));
+// // passport
+// router.get('/auth/slack', passport.authenticate('slack'));
 
-router.get('/auth/slack/callback',
-  passport.authenticate('slack', { session: false }),
-  (req, res) => 
-    console.log(res)
-  ,
-  (err, req, res, next) => {
-    res.status(500).send(console.log(`${err}`));
-  }
-);
+// router.get('/auth/slack/callback',
+//   passport.authenticate('slack', { session: false }),
+//   (req, res) => 
+//     console.log(res)
+//   ,
+//   (err, req, res, next) => {
+//     res.status(500).send(console.log(`${err}`));
+//   }
+// );
 
 
 router.get('/slack/authorization', (req, res) => {
@@ -48,40 +48,35 @@ router.get('/slack/authorization', (req, res) => {
   // res.status(200).send(console.log(res))
   // .catch(err => res.status(404).json(err));
 
-  // const postMessage	= 'https://slack.com/api/chat.postMessage';
-	// const updateMessage = 'https://slack.com/api/chat.update';
-	// /***** choose one or update with different token *****/
-	// 	const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotTonkotsu;   
-	// 	// const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotUclaBootcamp;  
-	// /*****************************************************/
-	// const channelPortion = `&channel=${channelId}`;  
-	// const textPortion = '&text=*Fist-to-Five Survey*';
-	// const textPortionUpdate = '&text=*Fist-to-Five Survey Updated*';
-	// const attachmentsPortion = '&attachments='+encodeURIComponent(`[{"pretext": "Results...", "text": "fist: ${fist} \n one: ${oneFinger} \n two: ${twoFingers} \n three: ${threeFingers} \n four: ${fourFingers} \n five: ${fiveFingers}"}]`);
-	// const tsPortion = '&ts=' + timestamp[0];
-	// const prettyPortion = '&pretty=1';  // no documentation availble about what this does
-  // const postUpdatedSurveyResults = {
-  //   url: updateMessage+slackTokenPortion+channelPortion+textPortionUpdate+attachmentsPortion+tsPortion+prettyPortion,
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json; charset=utf-8',
-  //   }
-  // }
-  // request(postUpdatedSurveyResults, function (error, response) {
-  //   // console.log('############### response', response);
-  //   // console.log('##############update# response.body', response.body);
-  //   console.log('##############update# postUpdatedSurveyResults', postUpdatedSurveyResults);
-  //   console.log('##############update# error', error);
+  const oauthAccess	= 'https://slack.com/api/oauth.access';
+	/***** TODO: update with different token *****/
+    const slackClientId = '?client_id=' + slackTokenPath.slackClientId; 
+    const slackClientSecret = '&client_secret=' + slackTokenPath.slackClientSecret;    
+	/*****************************************************/
+	const slackCode = '&code=' + req.query.code;  
+  
+  const postOauthAccess = {
+    url: oauthAccess+slackClientId+slackClientSecret+slackCode,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }
+  }
+  request(postOauthAccess, function (error, response) {
+
+    console.log('##############update# postOauthAccess', postOauthAccess);
+    console.log('##############update# error', error);
     
-  //   return;
-  // });
+    return;
+  });
 
 })
 
 
+
 // post request
 // posting survey form on slack
-router.post('/question', passport.authenticate('slack', {session: false }), (req, res) => {
+router.post('/', (req, res) => {
 	const singleFoodEmoji = foodEmoji[Math.floor(Math.random() * foodEmoji.length)];
 	const requestType = req.body || null;
 	
@@ -126,9 +121,7 @@ router.post('/question', passport.authenticate('slack', {session: false }), (req
 
 
 	// hit this with initial slack command
-	// if(requestType.command === '/fist-to-five' && requestType.text === ''){
-  if(requestType.command === '/fist-oauth' && requestType.text === ''){
-
+	if(requestType.command === '/fist-oauth' && requestType.text === ''){     // TODO: update path to correct one
 
 		// send survey out
 		res.status(200).send(
@@ -228,7 +221,7 @@ router.post('/question', passport.authenticate('slack', {session: false }), (req
 
 
 // posting survey form on slack
-router.post('/survey', passport.authenticate('slack', { session: false }), (req, res) => {
+router.post('/survey', (req, res) => {
 	const singleFoodEmoji = foodEmoji[Math.floor(Math.random() * foodEmoji.length)];
 	const survey = JSON.parse(req.body.payload);
 	const handGesture = survey.actions[0].selected_options[0].value;
@@ -386,3 +379,11 @@ function postSurvey(){
 /****************************************/
 
 module.exports = router;
+
+// https://api.slack.com/custom-integrations/legacy-tokens
+
+// https://api.slack.com/methods/chat.postEphemeral
+// https://api.slack.com/methods/chat.postMessage
+
+// https://stackoverflow.com/questions/32327858/how-to-send-a-post-request-from-node-js-express
+

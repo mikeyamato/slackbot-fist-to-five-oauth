@@ -201,28 +201,75 @@ function surveyToClass() {
 	const postMessageUrl	= 'https://slack.com/api/chat.postMessage';
 
 	/***** choose one or update with different token *****/
-	const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotTonkotsu;   
+	// const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotTonkotsu;   
 	// const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotUclaBootcamp;  
 	/*****************************************************/
 	
-	const channelPortion = `?channel=${channelId}`;  
+	// const channelPortion = `?channel=${channelId}`;  
 	const textPortion = encodeURIComponent(surveyQ.text);
 	const attachmentPortion = encodeURIComponent(JSON.stringify(surveyQ.attachments));  // w/o `JSON.stringify`, error of `[object object]`
-	const prettyPortion = '&pretty=1';  // no documentation availble about what this does
+	// const prettyPortion = '&pretty=1';  // no documentation availble about what this does
 
 	const postSurvey = {
-		url: postMessageUrl,
 		method: 'POST',
-    qs: {   // qs = query string
-      channel: `${channelId}`,
-      text: textPortion,
-      attachments: attachmentPortion,
-      pretty: '1' 
-    },
+		url: postMessageUrl,
     headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      Authorization: 'Bearer ' + accessToken
-		}
+      Authorization: 'Bearer ' + accessToken,
+      'Content-Type': 'application/json; charset=utf-8'
+    },
+    body: `{  
+      "channel":"${channelId}",
+      "text":"What time is it? It's Fist-to-Five survey time! Yay! :tada:",
+      "attachments":[  
+        {  
+          "title":"How well do you understand this material? \n \n As always, responses are 100% anonymous.\n",
+          "text":"Something can go here. Blah blah blah!",
+          "fallback":"Fist-to-Five survey. How well do you feel comfortable with the material?",
+          "color":"#FF9DBB",
+          "attachment_type":"default",
+          "callback_id":"fist_results",
+          "actions":[  
+            {  
+              "name":"fist_select",
+              "text":"Select one...",
+              "type":"select",
+              "options":[  
+                {  
+                  "text":"Fist  (Help, I'm lost)",
+                  "value":"fist"
+                },
+                {  
+                  "text":"1  (I barely understand)",
+                  "value":"one_finger"
+                },
+                {  
+                  "text":"2  (I'm starting to understand)",
+                  "value":"two_fingers"
+                },
+                {  
+                  "text":"3  (I somewhat get it)",
+                  "value":"three_fingers"
+                },
+                {  
+                  "text":"4  (I'm comfortable with the idea)",
+                  "value":"four_fingers"
+                },
+                {  
+                  "text":"5  (I understand this 100%)",
+                  "value":"five_fingers"
+                }
+              ],
+              "confirm":{  
+                "title":"Are you sure?",
+                "text":"Just confirming your selection. :nerd_face:",
+                "ok_text":"Yes, I'm sure",
+                "dismiss_text":"No, I'm not sure"
+              }
+            }
+          ]
+        }
+      ]
+    }`
 	}
 
 	request(postSurvey, function (error, response, body) {

@@ -207,7 +207,7 @@ function surveyToClass() {
 	
 	const channelPortion = `?channel=${channelId}`;  
 	const textPortion = encodeURIComponent(surveyQ.text);
-	const attachmentPortion = encodeURIComponent(surveyQ.attachments);
+	const attachmentPortion = encodeURIComponent(JSON.stringify(surveyQ.attachments));
 	const prettyPortion = '&pretty=1';  // no documentation availble about what this does
 
 	const postSurvey = {

@@ -73,6 +73,8 @@ router.get('/slack/authorization', (req, res) => {
     console.log('############### refresh token:', accessTokenJSON.expires_in)
     countdown(tokenExpireTime)
     
+    res.status(200).send(console.log('the end'))
+
     return;
   });
 

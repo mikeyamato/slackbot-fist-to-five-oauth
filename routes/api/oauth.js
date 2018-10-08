@@ -20,8 +20,8 @@ let fiveFingers = 0;
 let timestamp = [];
 let recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
 let channelId = '';  // this will be used for the running the survey in the appropriate channel
-let accessToken = '';
-let refreshToken = '';
+let accessToken = '';  // not to be cleared out
+let refreshToken = '';  // not to be cleared out
 
 // TODO: add GET request to grab member names https://api.slack.com/methods/conversations.members
 
@@ -68,9 +68,9 @@ router.get('/slack/authorization', (req, res) => {
     console.log('############### accessTokenJSON:', accessTokenJSON)
     console.log('############### access token:', accessTokenJSON.access_token)
     console.log('############### refresh token:', accessTokenJSON.refresh_token)
+    console.log('############### expires in (seconds):', accessTokenJSON.expires_in)
     accessToken = accessTokenJSON.access_token;
     refreshToken = accessTokenJSON.refresh_token;
-    console.log('############### refresh token:', accessTokenJSON.expires_in)
     countdown(tokenExpireTime)
     
     res.status(200).redirect('/success');
@@ -81,11 +81,9 @@ router.get('/slack/authorization', (req, res) => {
 })
 
 router.get('/success', (req, res) => {
-  res.send(
-    {
-      "text": "successfully authorized"
-    }
-  )
+  res.json({
+    msg: "authentication success!"
+  })
 })
 
 // countdown to refresh access token 
@@ -155,8 +153,6 @@ router.post('/', (req, res) => {
 		fiveFingers = 0;
 		timestamp = [];
     recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
-    // accessToken = '';
-    // refreshToken = '';
 
 		// console.log('**** resetting variables ****');
 		// console.log('**** fist', fist);
@@ -259,12 +255,62 @@ function surveyToClass() {
 	const prettyPortion = '&pretty=1';  // no documentation availble about what this does
 
 	const postSurvey = {
-		url: postMessage+channelPortion+textPortion+attachmentPortion+prettyPortion,
+		url: postMessage+channelPortion,
 		method: 'POST',
     Authorization: 'Bearer ' + accessToken,
 		headers: {
-			'Content-Type': 'application/json; charset=utf-8',
-		}
+			'Content-Type': 'application/json; charset=utf-8'
+    },
+    body: JSON.stringify({
+      "text": "What time is it? It's Fist-to-Five survey time! Yay! :tada:",
+      "attachments": [
+        {
+          "callback_id": "fist_results",
+          "title": "How well do you understand this material? \n \n As always, responses are 100% anonymous.\n",
+          "attachment_type": "default",
+          "color": "FF9DBB",
+          "actions": [
+            {
+              "name": "fist_select",
+              "text": "Select one...",
+              "type": "select",
+              "options": [
+                {
+                    "text": "Fist  (Help, I'm lost)",
+                    "value": "fist"
+                },
+                {
+                    "text": "1  (I barely understand)",
+                    "value": "one_finger"
+                },
+                {
+                    "text": "2  (I'm starting to understand)",
+                    "value": "two_fingers"
+                },
+                {
+                    "text": "3  (I somewhat get it)",
+                    "value": "three_fingers"
+                },
+                {
+                    "text": "4  (I'm comfortable with the idea)",
+                    "value": "four_fingers"
+                },
+                {
+                    "text": "5  (I understand this 100%)",
+                    "value": "five_fingers"
+                }
+              ],
+              "confirm": {
+                "text": "Just confirming your selection. :nerd_face:",
+                "title": "Are you sure?",
+                "ok_text": "Yes, I'm sure",
+                "dismiss_text": "No, I'm not sure"
+              }
+            }
+          ]
+        }
+      ]
+    })
 	}
 
 	request(postSurvey, function (error, response) {

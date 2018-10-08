@@ -21,6 +21,7 @@ let timestamp = [];
 let recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
 let channelId = '';  // this will be used for the running the survey in the appropriate channel
 let accessToken = '';
+let refreshToken = '';
 
 // TODO: add GET request to grab member names https://api.slack.com/methods/conversations.members
 
@@ -60,18 +61,63 @@ router.get('/slack/authorization', (req, res) => {
   }
   request(postOauthAccess, function (error, response) {
     const accessTokenJSON = JSON.parse(response.body)
-
+    const tokenExpireTime = accessTokenJSON.expires_in
     // console.log('############### postOauthAccess', postOauthAccess);
-    console.log('############### error', error);
-    console.log('############### response.body', response.body)
-    console.log('############### accessTokenJSON', accessTokenJSON)
-    console.log('############### access token', accessTokenJSON.access_token)
-    accessToken = accessTokenJSON.access_token
+    console.log('############### error:', error);
+    console.log('############### response.body:', response.body)
+    console.log('############### accessTokenJSON:', accessTokenJSON)
+    console.log('############### access token:', accessTokenJSON.access_token)
+    console.log('############### refresh token:', accessTokenJSON.refresh_token)
+    accessToken = accessTokenJSON.access_token;
+    refreshToken = accessTokenJSON.refresh_token;
+    console.log('############### refresh token:', accessTokenJSON.expires_in)
+    countdown(tokenExpireTime)
     
     return;
   });
 
 })
+
+// countdown to refresh access token 
+function countdown(seconds){
+  let milliseconds = seconds * 1000;
+  setTimeout(refreshAccessToken, milliseconds);
+  console.log('***** milliseconds should be 3600000:', milliseconds);
+};
+
+function refreshAccessToken(){
+  const oauthAccess	= 'https://slack.com/api/oauth.access';
+	/***** TODO: update with different token *****/
+    const slackClientId = '?client_id=' + slackTokenPath.slackClientId; 
+    const slackClientSecret = '&client_secret=' + slackTokenPath.slackClientSecret;    
+	/*****************************************************/
+  const slackGrantType = '&grant_type=refresh_token';
+
+  const postOauthRefreshAccess = {
+    url: oauthAccess+slackClientId+slackClientSecret+slackGrantType+refreshToken,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }
+  }
+
+  request(postOauthRefreshAccess, function (error, response) {
+    const accessTokenJSON = JSON.parse(response.body)
+    const tokenExpireTime = accessTokenJSON.expires_in
+    // console.log('############### postOauthRefreshAccess', postOauthRefreshAccess);
+    console.log('############### error:', error);
+    console.log('############### response.body:', response.body)
+    console.log('############### accessTokenJSON:', accessTokenJSON)
+    console.log('############### access token:', accessTokenJSON.access_token)
+    console.log('############### refresh token:', accessTokenJSON.refresh_token)
+    accessToken = accessTokenJSON.access_token;
+    refreshToken = accessTokenJSON.refresh_token;
+    console.log('############### refresh token:', accessTokenJSON.expires_in)
+    countdown(tokenExpireTime)
+    
+    return;
+  });
+};
 
 
 
@@ -99,7 +145,8 @@ router.post('/', (req, res) => {
 		fiveFingers = 0;
 		timestamp = [];
     recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
-    accessToken = '';
+    // accessToken = '';
+    // refreshToken = '';
 
 		// console.log('**** resetting variables ****');
 		// console.log('**** fist', fist);

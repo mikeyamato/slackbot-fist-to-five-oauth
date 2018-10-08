@@ -178,7 +178,7 @@ router.post('/', (req, res) => {
 	// hit this with initial slack command
 	if(requestType.command === '/fist-oauth' && requestType.text === ''){     // TODO: update path to correct one
 
-    console.log(surveyQ)
+    // console.log(surveyQ)
 
 		// send survey out
 		res.status(200).send(
@@ -205,7 +205,7 @@ function surveyToClass() {
 	// const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotUclaBootcamp;  
 	/*****************************************************/
 	
-	const channelPortion = `&channel=${channelId}`;  
+	const channelPortion = `?channel=${channelId}`;  
 	const textPortion = '&text=What time is it? It\'s Fist-to-Five survey time! Yay! :tada:';
 	const attachmentPortion = '&attachments='+encodeURIComponent(`[{
 		"title": "How well do you understand this material? \n \n As always, responses are 100% anonymous.\n",
@@ -265,9 +265,9 @@ function surveyToClass() {
 
 	request(postSurvey, function (error, response) {
 		
-		console.log('##############initial# error', error);
+		console.log('############## error', error);
     console.log('############## postSurvey', postSurvey)
-    // console.log('############## response', response)
+    console.log('############## response', response.ok)
 		
 		return;
 	});

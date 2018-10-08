@@ -1,8 +1,8 @@
 // https://api.slack.com/docs/interactive-message-field-guide
 
-module.exports.text = {
-	"What time is it? It's Fist-to-Five survey time! Yay! :tada:",
-}
+module.exports.text = [
+	"What time is it? It's Fist-to-Five survey time! Yay! :tada:"
+]
 
 module.exports.attachments = [
 	{

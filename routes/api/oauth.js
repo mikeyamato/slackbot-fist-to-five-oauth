@@ -206,68 +206,32 @@ function surveyToClass() {
 	/*****************************************************/
 	
 	const channelPortion = `?channel=${channelId}`;  
-	const textPortion = '&text='+encodeURIComponent(`What time is it? It's Fist-to-Five survey time! Yay! :tada:`);
-	const attachmentPortion = '&attachments='+encodeURIComponent(`[{
-		"title": "How well do you understand this material? \n \n As always, responses are 100% anonymous.\n",
-		"callback_id": "fist_results",
-		"attachment_type": "default",
-		"color": "#FF9DBB",
-		"actions": [
-			{
-				"name": "fist_select",
-				"text": "Select one...",
-				"type": "select",
-				"options": [
-					{
-						"text": "Fist  (Help, I'm lost)",
-						"value": "fist"
-					},
-					{
-						"text": "1  (I barely understand)",
-						"value": "one_finger"
-					},
-					{
-						"text": "2  (I'm starting to understand)",
-						"value": "two_fingers"
-					},
-					{
-						"text": "3  (I somewhat get it)",
-						"value": "three_fingers"
-					},
-					{
-						"text": "4  (I'm comfortable with the idea)",
-						"value": "four_fingers"
-					},
-					{
-						"text": "5  (I understand this 100%)",
-						"value": "five_fingers"
-					},
-				],
-				"confirm": {
-					"title": "Are you sure?",
-					"text": "Just confirming your selection. :nerd_face:",
-					"ok_text": "Yes, I'm sure",
-					"dismiss_text": "No, I'm not sure"
-				}
-			}
-		]
-	}]`);
+	const textPortion = encodeURIComponent(surveyQ.text);
+	const attachmentPortion = encodeURIComponent(surveyQ.attachments);
 	const prettyPortion = '&pretty=1';  // no documentation availble about what this does
 
 	const postSurvey = {
 		url: postMessage+channelPortion+textPortion+attachmentPortion+prettyPortion,
 		method: 'POST',
-		headers: {
+    qs: { 
+      channel: `${channelId}`,
+      text: textPortion,
+      attachments: attachmentPortion,
+      pretty: '1' 
+    },
+    headers: {
       'Content-Type': 'application/json; charset=utf-8',
-      'Authorization': 'Bearer ' + accessToken
+      Authorization: 'Bearer ' + accessToken
 		}
 	}
 
-	request(postSurvey, function (error, response) {
-		
+	request(postSurvey, function (error, response, body) {
+    
+    if (error) throw new Error(error);
 		console.log('############## error', error);
     console.log('############## postSurvey', postSurvey)
-    console.log('############## response', response)
+    // console.log('############## response', response)
+    console.log('############## body', body)
 		
 		return;
 	});

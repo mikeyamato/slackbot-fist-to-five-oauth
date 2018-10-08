@@ -257,9 +257,9 @@ function surveyToClass() {
 	const postSurvey = {
 		url: postMessage+channelPortion+textPortion+attachmentPortion+prettyPortion,
 		method: 'POST',
-    Authorization: 'Bearer ' + accessToken,
 		headers: {
-			'Content-Type': 'application/json; charset=utf-8',
+      'Content-Type': 'application/json; charset=utf-8',
+      'Authorization': 'Bearer ' + accessToken
 		}
 	}
 

@@ -267,7 +267,7 @@ function surveyToClass() {
 		
 		console.log('############## error', error);
     console.log('############## postSurvey', postSurvey)
-    console.log('############## response', response.ok)
+    console.log('############## response', response)
 		
 		return;
 	});

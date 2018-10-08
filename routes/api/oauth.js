@@ -198,7 +198,7 @@ router.post('/', (req, res) => {
 
 function surveyToClass() {
 
-	const postMessage	= 'https://slack.com/api/chat.postMessage';
+	const postMessageUrl	= 'https://slack.com/api/chat.postMessage';
 
 	/***** choose one or update with different token *****/
 	const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotTonkotsu;   
@@ -211,9 +211,9 @@ function surveyToClass() {
 	const prettyPortion = '&pretty=1';  // no documentation availble about what this does
 
 	const postSurvey = {
-		url: postMessage+channelPortion+textPortion+attachmentPortion+prettyPortion,
+		url: postMessageUrl,
 		method: 'POST',
-    qs: { 
+    qs: {   // qs = query string
       channel: `${channelId}`,
       text: textPortion,
       attachments: attachmentPortion,

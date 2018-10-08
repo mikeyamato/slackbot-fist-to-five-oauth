@@ -255,62 +255,12 @@ function surveyToClass() {
 	const prettyPortion = '&pretty=1';  // no documentation availble about what this does
 
 	const postSurvey = {
-		url: postMessage+channelPortion,
+		url: postMessage+channelPortion+textPortion+attachmentPortion+prettyPortion,
 		method: 'POST',
     Authorization: 'Bearer ' + accessToken,
 		headers: {
-			'Content-Type': 'application/json; charset=utf-8'
-    },
-    body: JSON.stringify({
-      "text": "What time is it? It's Fist-to-Five survey time! Yay! :tada:",
-      "attachments": [
-        {
-          "callback_id": "fist_results",
-          "title": "How well do you understand this material? \n \n As always, responses are 100% anonymous.\n",
-          "attachment_type": "default",
-          "color": "FF9DBB",
-          "actions": [
-            {
-              "name": "fist_select",
-              "text": "Select one...",
-              "type": "select",
-              "options": [
-                {
-                    "text": "Fist  (Help, I'm lost)",
-                    "value": "fist"
-                },
-                {
-                    "text": "1  (I barely understand)",
-                    "value": "one_finger"
-                },
-                {
-                    "text": "2  (I'm starting to understand)",
-                    "value": "two_fingers"
-                },
-                {
-                    "text": "3  (I somewhat get it)",
-                    "value": "three_fingers"
-                },
-                {
-                    "text": "4  (I'm comfortable with the idea)",
-                    "value": "four_fingers"
-                },
-                {
-                    "text": "5  (I understand this 100%)",
-                    "value": "five_fingers"
-                }
-              ],
-              "confirm": {
-                "text": "Just confirming your selection. :nerd_face:",
-                "title": "Are you sure?",
-                "ok_text": "Yes, I'm sure",
-                "dismiss_text": "No, I'm not sure"
-              }
-            }
-          ]
-        }
-      ]
-    })
+			'Content-Type': 'application/json; charset=utf-8',
+		}
 	}
 
 	request(postSurvey, function (error, response) {

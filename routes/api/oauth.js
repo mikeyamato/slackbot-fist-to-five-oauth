@@ -26,7 +26,6 @@ let channelMembers = [];
 let pollRequestor = '';
 
 const postEphemeralUrl	= 'https://slack.com/api/chat.postEphemeral';
-let timestamp = '';
 
 // TODO: add GET request to grab member names https://api.slack.com/methods/conversations.members
 
@@ -158,7 +157,6 @@ router.post('/', (req, res) => {
 		threeFingers = 0;
 		fourFingers = 0;
 		fiveFingers = 0;
-		timestamp = [];
     recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
     channelMembers = [];
 

@@ -183,8 +183,7 @@ function surveyToClass() {
   
   let msgSent = false;
   // TODO: async await on this. first grab people, then send out survey.
-
-  let getChannelMembers = () => {
+  let findPeople = new Promise((resolve, reject) => {
     console.log('******* this should hit 1st');
     
     const getConvMembers = {
@@ -225,9 +224,9 @@ function surveyToClass() {
         reject();
       };
     })
-  }
-
-  let sendMsgToChannel = () => {
+  })
+  
+  findPeople.then(() => {
     console.log('******* this should hit 2nd');
     
     const qTextPortion = JSON.stringify(surveyQ.text[0]);
@@ -261,20 +260,14 @@ function surveyToClass() {
         let postSurveyRes = JSON.parse(body);
         msgSent = postSurveyRes.ok;
         console.log('############## msgSent', msgSent)
-
-        resolve();
-        if (error)  {
-          reject();
-        };
       })
     }
-  }
+  })
 
-
-  let msgToRequestor = () => {
+  .then(() => {
     console.log('******* this should hit 3rd');
     // send requestor a confirmation msg that the survey went out
-    if (findPeople){
+    if (findPeople === true){
       const confirmMsg = {  
         method: 'POST',
         url: postEphemeralUrl,
@@ -297,19 +290,10 @@ function surveyToClass() {
         // console.log('############## response', response)
         console.log('############## body', body)
         
+        return;
       })
     }
-  }
-  var step1 = new Promise((resolve, reject) => {
-    getChannelMembers();
-  });
-  step1.then(() => {
-    sendMsgToChannel();
-  });
-  step1.then(() => {
-    msgToRequestor();
-  });
-
+  })
 }
       
 

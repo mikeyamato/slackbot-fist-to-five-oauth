@@ -226,7 +226,7 @@ function surveyToClass() {
     })
   })
   
-  findPeople.then(() => {
+  .then(() => {
     console.log('******* this should hit 2nd');
     
     const qTextPortion = JSON.stringify(surveyQ.text[0]);

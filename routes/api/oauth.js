@@ -25,9 +25,10 @@ let refreshToken = '';  // not to be cleared out
 let channelMembers = [];
 let pollRequestor = '';
 
+const oauthAccessUrl	= 'https://slack.com/api/oauth.access';
+const getConvMembersUrl	= 'https://slack.com/api/conversations.members';
 const postEphemeralUrl	= 'https://slack.com/api/chat.postEphemeral';
 const postMessageUrl = 'https://slack.com/api/chat.postMessage';
-const updateUrl = 'https://slack.com/api/chat.update';
 
 
 // TODO: add GET request to grab member names https://api.slack.com/methods/conversations.members
@@ -52,7 +53,6 @@ router.get('/slack/authorization', (req, res) => {
   // console.log('******',req.query)
   // console.log('******',req.query.code)
 
-  const oauthAccess	= 'https://slack.com/api/oauth.access';
 	/***** TODO: update with different token *****/
     const slackClientId = '?client_id=' + slackTokenPath.slackClientId; 
     const slackClientSecret = '&client_secret=' + slackTokenPath.slackClientSecret;    
@@ -60,7 +60,7 @@ router.get('/slack/authorization', (req, res) => {
 	const slackCode = '&code=' + req.query.code;  
   
   const postOauthAccess = {
-    url: oauthAccess+slackClientId+slackClientSecret+slackCode,
+    url: oauthAccessUrl+slackClientId+slackClientSecret+slackCode,
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -101,7 +101,6 @@ function countdown(seconds){
 };
 
 function refreshAccessToken(){
-  const oauthAccess	= 'https://slack.com/api/oauth.access';
 	/***** TODO: update with different token *****/
     const slackClientId = '?client_id=' + slackTokenPath.slackClientId; 
     const slackClientSecret = '&client_secret=' + slackTokenPath.slackClientSecret;    
@@ -109,7 +108,7 @@ function refreshAccessToken(){
   const slackGrantType = '&grant_type=refresh_token';
 
   const postOauthRefreshAccess = {
-    url: oauthAccess+slackClientId+slackClientSecret+slackGrantType+refreshToken,
+    url: oauthAccessUrl+slackClientId+slackClientSecret+slackGrantType+refreshToken,
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -211,7 +210,7 @@ function surveyToClass() {
   let findPeople = new Promise((resolve, reject) => {
     console.log('******* this should hit 1st');
 
-    const getConvMembersUrl	= 'https://slack.com/api/conversations.members';
+    
     
     const getConvMembers = {
       method: 'GET',

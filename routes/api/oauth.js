@@ -180,11 +180,11 @@ router.post('/', (req, res) => {
 /************************************************/
 
 function surveyToClass() {
-  surveyToClassAsync()
-  // TODO: async await on this. first grab people, then send out survey.
   
-  async function surveyToClassAsync() {
+  // TODO: async await on this. first grab people, then send out survey.
+  let findPeople = new Promise((resolve, reject) => {
     console.log('******* this should hit 1st');
+    
     const getConvMembers = {
       method: 'GET',
       url: getConvMembersUrl,
@@ -201,7 +201,7 @@ function surveyToClass() {
     request(getConvMembers, function (error, response, body) {
       let parsedJSON = {};
       
-      if (error) throw new Error(error);
+      // if (error) throw new Error(error);
       console.log('############## error', error);
       // console.log('############## postSurvey', getConvMembers)
       // console.log('############## response', response)
@@ -218,9 +218,14 @@ function surveyToClass() {
       // console.log('############## updated channelMembers', channelMembers)
       
       // return;
-      
+      resolve();
+      if (error)  {
+        reject();
+      };
     })
-  }
+  })
+  
+  findPeople.then(() => {
       console.log('******* this should hit 2nd');
       
       const qTextPortion = JSON.stringify(surveyQ.text[0]);
@@ -244,7 +249,7 @@ function surveyToClass() {
           }`
         }
   
-        await request(postSurvey, function (error, response, body) {
+        request(postSurvey, function (error, response, body) {
           
           if (error) throw new Error(error);
           console.log('############## error', error);
@@ -256,6 +261,8 @@ function surveyToClass() {
         })
       }
     }
+  )
+}
 
 /************************************************/
 

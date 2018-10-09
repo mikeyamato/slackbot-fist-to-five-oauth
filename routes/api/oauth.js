@@ -206,7 +206,7 @@ function surveyToClass() {
 	/*****************************************************/
 	
 	// const channelPortion = `?channel=${channelId}`;  
-	const textPortion = surveyQ.text;
+	const textPortion = surveyQ.text[0];
   const attachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
 	// const prettyPortion = '&pretty=1';  // no documentation availble about what this does
 
@@ -220,7 +220,7 @@ function surveyToClass() {
     body: `{  
       "channel":"${channelId}",
       "text":${textPortion},
-      "attachments": ${attachmentPortion}
+      "attachments": [${attachmentPortion}]
     }`
 	}
 

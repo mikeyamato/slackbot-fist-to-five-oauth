@@ -230,7 +230,6 @@ function surveyToClass() {
       
       const qTextPortion = JSON.stringify(surveyQ.text[0]);
       const qAttachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
-      let msgSent = false;
 
       // loop through users
       for (let person of channelMembers){
@@ -258,39 +257,43 @@ function surveyToClass() {
           // console.log('############## response', response)
           console.log('############## body', body)
           let postSurveyRes = JSON.parse(body);
-          msgSent = postSurveyRes.ok;
+          let msgSent = postSurveyRes.ok;
           console.log('############## msgSent', msgSent)
-          return;
         })
+        .then((msgSent) => {
+
+          // send requestor a confirmation msg that the survey went out
+          if (msgSent === true){
+            const confirmMsg = {  
+              method: 'POST',
+              url: postEphemeralUrl,
+              headers: {
+                Authorization: 'Bearer ' + accessToken,
+                'Content-Type': 'application/json; charset=utf-8'
+              },
+              body: `{  
+                "channel": "${channelId}",
+                "user": "${pollRequestor}",
+                "text": "Bombs away!",
+              }`
+            }
+    
+            request(postSurvey, function (error, response, body) {
+              
+              if (error) throw new Error(error);
+              console.log('############## error', error);
+              console.log('############## postSurvey', postSurvey)
+              // console.log('############## response', response)
+              console.log('############## body', body)
+              
+              return;
+            })
+          }
+          }
+        )
+        
       }
       
-      // send requestor a confirmation msg that the survey went out
-      if (msgSent === true){
-        const confirmMsg = {  
-          method: 'POST',
-          url: postEphemeralUrl,
-          headers: {
-            Authorization: 'Bearer ' + accessToken,
-            'Content-Type': 'application/json; charset=utf-8'
-          },
-          body: `{  
-            "channel": "${channelId}",
-            "user": "${pollRequestor}",
-            "text": "Bombs away!",
-          }`
-        }
-
-        request(postSurvey, function (error, response, body) {
-          
-          if (error) throw new Error(error);
-          console.log('############## error', error);
-          console.log('############## postSurvey', postSurvey)
-          // console.log('############## response', response)
-          console.log('############## body', body)
-          
-          return;
-        })
-      }
     }
   )
 }

@@ -265,7 +265,7 @@ function surveyToClass() {
   })
 
   .then(() => {
-
+    console.log('******* this should hit 3rd');
     // send requestor a confirmation msg that the survey went out
     if (findPeople === true){
       const confirmMsg = {  

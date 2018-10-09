@@ -260,10 +260,9 @@ function surveyToClass() {
           let msgSent = postSurveyRes.ok;
           console.log('############## msgSent', msgSent)
         })
-        .then((msgSent) => {
+        .then(() => {
 
           // send requestor a confirmation msg that the survey went out
-          if (msgSent === true){
             const confirmMsg = {  
               method: 'POST',
               url: postEphemeralUrl,
@@ -288,7 +287,6 @@ function surveyToClass() {
               
               return;
             })
-          }
           }
         )
         

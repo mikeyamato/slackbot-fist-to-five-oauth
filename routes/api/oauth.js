@@ -282,11 +282,11 @@ function surveyToClass() {
         }`
       }
 
-      request(postSurvey, function (error, response, body) {
+      request(confirmMsg, function (error, response, body) {
         
         if (error) throw new Error(error);
         console.log('############## error', error);
-        console.log('############## postSurvey', postSurvey)
+        console.log('############## confirmMsg', confirmMsg)
         // console.log('############## response', response)
         console.log('############## body', body)
         

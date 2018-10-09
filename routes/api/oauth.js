@@ -215,7 +215,7 @@ function surveyToClass() {
       // console.log('############## channel members', channelMembers)
       
       // grab everyone's name but the person invoking the survey
-      channelMembers.filter(!pollRequestor);
+      channelMembers.filter(a => a !== pollRequestor);  // `a` is arbitrary
       // channelMembers.splice(memberIndex,1)
       // console.log('############## updated channelMembers', channelMembers)
       

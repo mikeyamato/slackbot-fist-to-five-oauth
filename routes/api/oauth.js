@@ -197,7 +197,7 @@ async function surveyToClass() {
       }
     }
     
-    await request(getConvMembers, function (error, response, body) {
+    request(getConvMembers, function (error, response, body) {
       let parsedJSON = {};
       
       if (error) throw new Error(error);
@@ -243,7 +243,7 @@ async function surveyToClass() {
           }`
         }
   
-        request(postSurvey, function (error, response, body) {
+        await request(postSurvey, function (error, response, body) {
           
           if (error) throw new Error(error);
           console.log('############## error', error);

@@ -139,7 +139,7 @@ router.post('/', (req, res) => {
 	
 	// console.log('**** 1', req)
 	// console.log('**** 2', req.body);
-	console.log('**** requestType', requestType);
+	// console.log('**** requestType', requestType);
 	
 	
 	// reset variables
@@ -243,10 +243,13 @@ function surveyToClass() {
       
       // return;
     })
+    resolve();
+    if (err)  {
+      reject();
+    };
   })
   
-  findPeople.then(
-    function(){
+  findPeople.then(() => {
       console.log('******* this should hit 2nd');
       const postMessageUrl	= 'https://slack.com/api/chat.postMessage';
 

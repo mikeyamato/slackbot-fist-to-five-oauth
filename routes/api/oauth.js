@@ -187,13 +187,7 @@ async function surveyToClass() {
   // 1> getChannelMembers
   // 2> sendMsgToChannel
   // 3> msgToRequestor
-  try {
-    await getChannelMembers();
-    await sendMsgToChannel();
-    await msgToRequestor();
-  }catch(err){
-    console.log('*********** err', err)
-  }
+  
 
   let getChannelMembers = () => {
     console.log('******* this should hit 1st');
@@ -303,6 +297,14 @@ async function surveyToClass() {
         return;
       })
     }
+  }
+
+  try {
+    await getChannelMembers();
+    await sendMsgToChannel();
+    await msgToRequestor();
+  }catch(err){
+    console.log('*********** err', err)
   }
 
 }

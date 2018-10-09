@@ -212,11 +212,11 @@ function surveyToClass() {
       parsedJSON = JSON.parse(body);
       // console.log('############## parsedJSON.member', parsedJSON.members)
       let channelMembers = parsedJSON.members;
-      console.log('############## channel members', channelMembers)
+      // console.log('############## channel members', channelMembers)
       
       // grab everyone's name but the person invoking the survey
-      let memberIndex = channelMembers.indexOf(pollRequestor);
-      channelMembers.splice(memberIndex,1)
+      channelMembers.filter(!pollRequestor);
+      // channelMembers.splice(memberIndex,1)
       // console.log('############## updated channelMembers', channelMembers)
       
       // return;
@@ -229,6 +229,7 @@ function surveyToClass() {
   
   .then((channelMembers) => {
     console.log('******* this should hit 2nd');
+    console.log('############## 2nd channelMembers',channelMembers);
     
     const qTextPortion = JSON.stringify(surveyQ.text[0]);
     const qAttachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
@@ -268,6 +269,8 @@ function surveyToClass() {
 
   .then((msgSent) => {
     console.log('******* this should hit 3rd');
+    console.log('############## 3rd msgSent',msgSent);
+
     // send requestor a confirmation msg that the survey went out
     if (msgSent){
       const confirmMsg = {  

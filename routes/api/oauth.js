@@ -264,7 +264,7 @@ function surveyToClass() {
     }
   })
 
-  findPeople.then(() => {;
+  .then(() => {
 
     // send requestor a confirmation msg that the survey went out
     if (findPeople === true){

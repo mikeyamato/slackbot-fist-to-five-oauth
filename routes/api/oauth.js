@@ -145,7 +145,9 @@ router.post('/', (req, res) => {
 	// reset variables
 	if(requestType.text === 'reset'){  
 		channelId = requestType.channel_id;
-		console.log('**** channelId', channelId);
+    console.log('**** channel id', channelId);
+    pollRequestor = requestType.user_id;
+    console.log('**** user id', pollRequestor);
 
 		fist = 0;
 		oneFinger = 0;
@@ -200,48 +202,90 @@ router.post('/', (req, res) => {
 /************************************************/
 
 function surveyToClass() {
-
+  
   // TODO: async await on this. first grab people, then send out survey.
-  findPeople()
-  // TODO: grab everyone's name but the person invoking the survey
-  // TODO: return the survey to the person who invoked the survey
+  let findPeople = new Promise((resolve, reject) => {
+    console.log('******* this should hit 1st');
 
-	const postMessageUrl	= 'https://slack.com/api/chat.postMessage';
-
-	/***** choose one or update with different token *****/
-	// const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotTonkotsu;   
-	// const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotUclaBootcamp;  
-	/*****************************************************/
-	
-	// const channelPortion = `?channel=${channelId}`;  
-	const textPortion = JSON.stringify(surveyQ.text[0]);
-  const attachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
-	// const prettyPortion = '&pretty=1';  // no documentation availble about what this does
-
-	const postSurvey = {
-		method: 'POST',
-		url: postMessageUrl,
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
-      'Content-Type': 'application/json; charset=utf-8'
-    },
-    body: `{  
-      "channel":"${channelId}",
-      "text":${textPortion},
-      "attachments": [${attachmentPortion}]
-    }`
-	}
-
-	request(postSurvey, function (error, response, body) {
+    const getConvMembersUrl	= 'https://slack.com/api/conversations.members';
     
-    if (error) throw new Error(error);
-		console.log('############## error', error);
-    console.log('############## postSurvey', postSurvey)
-    // console.log('############## response', response)
-    console.log('############## body', body)
-		
-		return;
-	});
+    const getConvMembers = {
+      method: 'GET',
+      url: getConvMembersUrl,
+      qs: { 
+        channel: `${channelId}`, 
+        pretty: '1' 
+      },
+      headers: { 
+        Authorization: 'Bearer ' + accessToken,
+        'Content-Type': 'application/x-www-form-urlencoded' 
+      }
+    }
+    
+    request(getConvMembers, function (error, response, body) {
+      let parsedJSON = {};
+      
+      if (error) throw new Error(error);
+      console.log('############## error', error);
+      // console.log('############## postSurvey', getConvMembers)
+      // console.log('############## response', response)
+      // console.log('############## body', body)
+      console.log('############## body parse', JSON.parse(body))
+      parsedJSON = JSON.parse(body);
+      console.log('############## parsedJSON.member', parsedJSON.members)
+      channelMembers = parsedJSON.members;
+      console.log('############## channel members', channelMembers)
+      
+      // TODO: grab everyone's name but the person invoking the survey (pollRequestor)
+      let memberIndex = channelMembers.indexOf(pollRequestor);
+      channelMembers.splice(memberIndex,1)
+      console.log('############## updated channelMembers', channelMembers)
+      
+      // return;
+    })
+  })
+  
+  findPeople.then(
+    function something(){
+      console.log('******* this should hit 2nd');
+      const postMessageUrl	= 'https://slack.com/api/chat.postMessage';
+
+      /***** choose one or update with different token *****/
+      // const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotTonkotsu;   
+      // const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotUclaBootcamp;  
+      /*****************************************************/
+      
+      // const channelPortion = `?channel=${channelId}`;  
+      const textPortion = JSON.stringify(surveyQ.text[0]);
+      const attachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
+      // const prettyPortion = '&pretty=1';  // no documentation availble about what this does
+
+      const postSurvey = {
+        method: 'POST',
+        url: postMessageUrl,
+        headers: {
+          Authorization: 'Bearer ' + accessToken,
+          'Content-Type': 'application/json; charset=utf-8'
+        },
+        body: `{  
+          "channel":"${channelId}",
+          "text":${textPortion},
+          "attachments": [${attachmentPortion}]
+        }`
+      }
+
+      request(postSurvey, function (error, response, body) {
+        
+        if (error) throw new Error(error);
+        console.log('############## error', error);
+        console.log('############## postSurvey', postSurvey)
+        // console.log('############## response', response)
+        console.log('############## body', body)
+        
+        return;
+      })
+    }
+  )
 }
 
 
@@ -288,6 +332,8 @@ function findPeople(){
 
 // posting survey form on slack
 router.post('/survey', (req, res) => {
+  // TODO: return the survey to the person who invoked the survey (pollRequestor)
+
 	const singleFoodEmoji = foodEmoji[Math.floor(Math.random() * foodEmoji.length)];
 	const survey = JSON.parse(req.body.payload);
 	const handGesture = survey.actions[0].selected_options[0].value;

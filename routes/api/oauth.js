@@ -225,7 +225,7 @@ function surveyToClass() {
     request(getConvMembers, function (error, response, body) {
       let parsedJSON = {};
       
-      if (error) throw new Error(error);
+      // if (error) throw new Error(error);
       console.log('############## error', error);
       // console.log('############## postSurvey', getConvMembers)
       // console.log('############## response', response)
@@ -243,7 +243,7 @@ function surveyToClass() {
       
       // return;
       resolve();
-      if (err)  {
+      if (error)  {
         reject();
       };
     })

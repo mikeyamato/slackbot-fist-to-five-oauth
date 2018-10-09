@@ -179,11 +179,12 @@ router.post('/', (req, res) => {
 				
 /************************************************/
 
-async function surveyToClass() {
-  
+function surveyToClass() {
+  surveyToClassAsync()
   // TODO: async await on this. first grab people, then send out survey.
+  
+  async function surveyToClassAsync() {
     console.log('******* this should hit 1st');
-    
     const getConvMembers = {
       method: 'GET',
       url: getConvMembersUrl,
@@ -219,7 +220,7 @@ async function surveyToClass() {
       // return;
       
     })
-  
+  }
       console.log('******* this should hit 2nd');
       
       const qTextPortion = JSON.stringify(surveyQ.text[0]);

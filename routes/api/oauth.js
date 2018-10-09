@@ -1,6 +1,3 @@
-
-
-// const passport = require('passport');
 const express = require('express');
 const request = require('request');
 const router = express.Router();
@@ -18,7 +15,7 @@ let threeFingers = 0;
 let fourFingers = 0;
 let fiveFingers = 0;
 let timestamp = '';
-let recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
+let recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};  // used to store names; default = inactive
 let channelId = '';  // this will be used for the running the survey in the appropriate channel
 let accessToken = '';  // not to be cleared out
 let refreshToken = '';  // not to be cleared out
@@ -30,23 +27,6 @@ const getConvMembersUrl	= 'https://slack.com/api/conversations.members';
 const postEphemeralUrl	= 'https://slack.com/api/chat.postEphemeral';
 const postMessageUrl = 'https://slack.com/api/chat.postMessage';
 const updateUrl = 'https://slack.com/api/chat.update';
-
-
-// TODO: add GET request to grab member names https://api.slack.com/methods/conversations.members
-
-
-// // passport
-// router.get('/auth/slack', passport.authenticate('slack'));
-
-// router.get('/auth/slack/callback',
-//   passport.authenticate('slack', { session: false }),
-//   (req, res) => 
-//     console.log(res)
-//   ,
-//   (err, req, res, next) => {
-//     res.status(500).send(console.log(`${err}`));
-//   }
-// );
 
 
 router.get('/slack/authorization', (req, res) => {
@@ -210,8 +190,6 @@ function surveyToClass() {
   // TODO: async await on this. first grab people, then send out survey.
   let findPeople = new Promise((resolve, reject) => {
     console.log('******* this should hit 1st');
-
-    
     
     const getConvMembers = {
       method: 'GET',
@@ -240,7 +218,7 @@ function surveyToClass() {
       channelMembers = parsedJSON.members;
       console.log('############## channel members', channelMembers)
       
-      // TODO: grab everyone's name but the person invoking the survey (pollRequestor)
+      // grab everyone's name but the person invoking the survey
       let memberIndex = channelMembers.indexOf(pollRequestor);
       channelMembers.splice(memberIndex,1)
       console.log('############## updated channelMembers', channelMembers)
@@ -304,7 +282,6 @@ function surveyToClass() {
 
 // posting survey form on slack
 router.post('/survey', (req, res) => {
-  // TODO: return the survey to the person who invoked the survey (pollRequestor)
 
 	const singleFoodEmoji = foodEmoji[Math.floor(Math.random() * foodEmoji.length)];
 	const survey = JSON.parse(req.body.payload);
@@ -419,7 +396,6 @@ function postSurvey(){
       },
       body: `{  
         "channel": "${channelId}",
-        "user": "${pollRequestor}",
         "ts": "${timestamp}",
         "text": "${resultsTextPortionUpdate}",
         "attachments": ${resultsAttachmentsPortion}
@@ -470,34 +446,6 @@ function postSurvey(){
 
       return;
     })
-
-
-
-
-
-
-
-		// const postSurveyResults = {
-		// 	url: postMessage+slackTokenPortion+channelPortion+resultsTextPortion+resultsAttachmentsPortion+prettyPortion,
-		// 	method: 'POST',
-		// 	headers: {
-		// 		'Content-Type': 'application/json; charset=utf-8',
-		// 	}
-		// }
-		// request(postSurveyResults, function (error, response) {
-		// 	const postSurveyResultsJSON = JSON.parse(response.body);
-		// 	// console.log('############### response', response);
-		// 	// console.log('##############initial# response.body', response.body);
-		// 	// console.log('##############initial# response.body.ts', postSurveyResultsJSON.ts);
-		// 	// console.log('##############initial# response.body.ts', response.body.messages.ts);
-		// 	console.log('##############initial# postSurveyResults', postSurveyResults);
-		// 	console.log('##############initial# error', error);
-			
-		// 	timestamp.push(postSurveyResultsJSON.ts)
-		// 	// console.log('##############initial# timestamp', timestamp);
-			
-		// 	return;
-		// });
 	}
 }
 /****************************************/

@@ -179,11 +179,20 @@ router.post('/', (req, res) => {
 				
 /************************************************/
 
-function surveyToClass() {
+async function surveyToClass() {
   
   let msgSent = false;
   // TODO: async await on this. first grab people, then send out survey.
-  let findPeople = new Promise((resolve, reject) => {
+
+  // 1> getChannelMembers
+  // 2> sendMsgToChannel
+  // 3> msgToRequestor
+
+  await getChannelMembers();
+  await sendMsgToChannel();
+  await msgToRequestor();
+
+  let getChannelMembers = () => {
     console.log('******* this should hit 1st');
     
     const getConvMembers = {
@@ -219,14 +228,11 @@ function surveyToClass() {
       // console.log('############## updated channelMembers', channelMembers)
       
       // return;
-      resolve();
-      if (error)  {
-        reject();
-      };
+      
     })
-  })
-  
-  .then(() => {
+  }
+
+  let sendMsgToChannel = () => {
     console.log('******* this should hit 2nd');
     
     const qTextPortion = JSON.stringify(surveyQ.text[0]);
@@ -254,20 +260,21 @@ function surveyToClass() {
         
         if (error) throw new Error(error);
         console.log('############## error', error);
-        console.log('############## postSurvey', postSurvey)
+        // console.log('############## postSurvey', postSurvey)
         // console.log('############## response', response)
-        console.log('############## body', body)
+        // console.log('############## body', body)
         let postSurveyRes = JSON.parse(body);
         msgSent = postSurveyRes.ok;
         console.log('############## msgSent', msgSent)
       })
     }
-  })
+  }
 
-  .then(() => {
+
+  let msgToRequestor = () => {
     console.log('******* this should hit 3rd');
     // send requestor a confirmation msg that the survey went out
-    if (findPeople === true){
+    if (findPeople){
       const confirmMsg = {  
         method: 'POST',
         url: postEphemeralUrl,
@@ -293,7 +300,8 @@ function surveyToClass() {
         return;
       })
     }
-  })
+  }
+
 }
       
 

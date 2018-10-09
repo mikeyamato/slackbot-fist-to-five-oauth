@@ -26,6 +26,8 @@ let channelMembers = [];
 let pollRequestor = '';
 
 const postEphemeralUrl	= 'https://slack.com/api/chat.postEphemeral';
+const updateUrl = 'https://slack.com/api/chat.update';
+
 
 // TODO: add GET request to grab member names https://api.slack.com/methods/conversations.members
 
@@ -399,31 +401,43 @@ router.post('/survey', (req, res) => {
 /***** POST survey results to Slack *****/
 /****************************************/
 function postSurvey(){
-	const updateMessage = 'https://slack.com/api/chat.update';
 
 	const resultsTextPortion = '*Fist-to-Five Survey*';
-	const resultsTextPortionUpdate = '&text=*Fist-to-Five Survey Updated*';
+	const resultsTextPortionUpdate = '*Fist-to-Five Survey Updated*';
 	const resultsAttachmentsPortion = `[{"pretext": "Results...", "text": "fist: ${fist} \n one: ${oneFinger} \n two: ${twoFingers} \n three: ${threeFingers} \n four: ${fourFingers} \n five: ${fiveFingers}"}]`;
-	const tsPortion = '&ts=' + timestamp[0];
-	const prettyPortion = '&pretty=1';  // no documentation availble about what this does
 
-	if(timestamp.length){
-		/***** update POST *****/
-		const postUpdatedSurveyResults = {
-			url: updateMessage+slackTokenPortion+channelPortion+resultsTextPortionUpdate+resultsAttachmentsPortion+tsPortion+prettyPortion,
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json; charset=utf-8',
-			}
-		}
-		request(postUpdatedSurveyResults, function (error, response) {
-			// console.log('############### response', response);
-			// console.log('##############update# response.body', response.body);
-			console.log('##############update# postUpdatedSurveyResults', postUpdatedSurveyResults);
-			console.log('##############update# error', error);
-			
-			return;
-		});
+	if(timestamp !== null || 'undefined' || ''){
+    /***** update response *****/
+    const postSurveyResultsUpdate = {  // TODO: update `user`
+      method: 'POST',
+      url: updateUrl,
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      body: `{  
+        "channel": "${channelId}",
+        "user": "${pollRequestor}",
+        "ts": "${timestamp}",
+        "text": "${resultsTextPortionUpdate}",
+        "attachments": ${resultsAttachmentsPortion}
+      }`
+    }
+
+    request(postSurveyResultsUpdate, function (error, response, body) {
+      
+      if (error) throw new Error(error);
+      console.log('############## error', error);
+      console.log('############## postSurveyResultsUpdate', postSurveyResultsUpdate)
+      // console.log('############## response', response)
+      console.log('############## body', body)
+      // let surveyResultsRes = JSON.parse(body)
+      // console.log('############## body.message_ts', surveyResultsRes.message_ts)
+      // timestamp = surveyResultsRes.message_ts;
+      // console.log('############## timestamp', timestamp)
+
+      return;
+    });
 	} else {
     /***** initial POST *****/
     const postSurveyResults = {  // TODO: update `user`
@@ -445,11 +459,11 @@ function postSurvey(){
       
       if (error) throw new Error(error);
       console.log('############## error', error);
-      console.log('############## postSurvey', postSurveyResults)
+      console.log('############## postSurveyResults', postSurveyResults)
       // console.log('############## response', response)
-      console.log('############## body', body)
+      // console.log('############## body', body)
       let surveyResultsRes = JSON.parse(body)
-      console.log('############## body.message_ts', surveyResultsRes.message_ts)
+      // console.log('############## body.message_ts', surveyResultsRes.message_ts)
       timestamp = surveyResultsRes.message_ts;
       console.log('############## timestamp', timestamp)
 

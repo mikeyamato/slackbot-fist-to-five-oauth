@@ -265,6 +265,9 @@ function findPeople(){
     // console.log('############## response', response)
     console.log('############## body', body)
     console.log('############## body.members', body.members)
+    console.log('############## response', response)
+    console.log('############## response.body.members', response.body.members)
+
 		
 		return;
   });

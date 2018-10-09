@@ -222,7 +222,7 @@ function surveyToClass() {
       // return;
       resolve(filteredMembers);
       if (error)  {
-        reject();
+        reject(console.log(error));
       };
     })
   })
@@ -233,6 +233,7 @@ function surveyToClass() {
     
     const qTextPortion = JSON.stringify(surveyQ.text[0]);
     const qAttachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
+    let msgSent = false;
 
     // loop through users
     for (let person of filteredMembers){
@@ -260,11 +261,11 @@ function surveyToClass() {
         // console.log('############## response', response)
         // console.log('############## body', body)
         let postSurveyRes = JSON.parse(body);
-        let msgSent = postSurveyRes.ok;
-        console.log('############## msgSent', msgSent)
-        return msgSent;
+        msgSent = postSurveyRes.ok;
       })
     }
+    console.log('############## msgSent', msgSent)
+    return msgSent;
   })
 
   .then((msgSent) => {

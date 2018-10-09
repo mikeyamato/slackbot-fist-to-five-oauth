@@ -183,7 +183,8 @@ function surveyToClass() {
   
   let msgSent = false;
   // TODO: async await on this. first grab people, then send out survey.
-  let findPeople = new Promise((resolve, reject) => {
+  
+  new Promise((resolve, reject) => {
     console.log('******* this should hit 1st');
     
     const getConvMembers = {
@@ -226,7 +227,7 @@ function surveyToClass() {
     })
   })
   
-  findPeople.then(() => {
+  .then(() => {
     console.log('******* this should hit 2nd');
     
     const qTextPortion = JSON.stringify(surveyQ.text[0]);

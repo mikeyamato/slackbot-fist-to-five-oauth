@@ -28,7 +28,6 @@ const postEphemeralUrl	= 'https://slack.com/api/chat.postEphemeral';
 const postMessageUrl = 'https://slack.com/api/chat.postMessage';
 const updateUrl = 'https://slack.com/api/chat.update';
 
-
 router.get('/slack/authorization', (req, res) => {
   // console.log('****** hit')
   // console.log('******',req.query)
@@ -52,11 +51,11 @@ router.get('/slack/authorization', (req, res) => {
     const tokenExpireTime = accessTokenJSON.expires_in
     // console.log('############### postOauthAccess', postOauthAccess);
     console.log('############### error:', error);
-    console.log('############### response.body:', response.body)
-    console.log('############### accessTokenJSON:', accessTokenJSON)
-    console.log('############### access token:', accessTokenJSON.access_token)
-    console.log('############### refresh token:', accessTokenJSON.refresh_token)
-    console.log('############### expires in (seconds):', accessTokenJSON.expires_in)
+    // console.log('############### response.body:', response.body)
+    // console.log('############### accessTokenJSON:', accessTokenJSON)
+    // console.log('############### access token:', accessTokenJSON.access_token)
+    // console.log('############### refresh token:', accessTokenJSON.refresh_token)
+    // console.log('############### expires in (seconds):', accessTokenJSON.expires_in)
     accessToken = accessTokenJSON.access_token;
     refreshToken = accessTokenJSON.refresh_token;
     countdown(tokenExpireTime)
@@ -78,7 +77,7 @@ router.get('/success', (req, res) => {
 function countdown(seconds){
   let milliseconds = seconds * 1000;
   setTimeout(refreshAccessToken, milliseconds);
-  console.log('***** milliseconds should be 3600000:', milliseconds);
+  // console.log('***** milliseconds should be 3600000:', milliseconds);
 };
 
 function refreshAccessToken(){
@@ -101,10 +100,10 @@ function refreshAccessToken(){
     const tokenExpireTime = accessTokenJSON.expires_in
     // console.log('############### postOauthRefreshAccess', postOauthRefreshAccess);
     console.log('############### error:', error);
-    console.log('############### response.body:', response.body)
-    console.log('############### accessTokenJSON:', accessTokenJSON)
-    console.log('############### access token:', accessTokenJSON.access_token)
-    console.log('############### refresh token:', accessTokenJSON.refresh_token)
+    // console.log('############### response.body:', response.body)
+    // console.log('############### accessTokenJSON:', accessTokenJSON)
+    // console.log('############### access token:', accessTokenJSON.access_token)
+    // console.log('############### refresh token:', accessTokenJSON.refresh_token)
     accessToken = accessTokenJSON.access_token;
     refreshToken = accessTokenJSON.refresh_token;
     console.log('############### refresh token:', accessTokenJSON.expires_in)
@@ -125,7 +124,6 @@ router.post('/', (req, res) => {
 	// console.log('**** 1', req)
 	// console.log('**** req.body', req.body);
 	// console.log('**** requestType', requestType);
-	
 	
 	// reset variables
 	if(requestType.text === 'reset'){  
@@ -163,15 +161,11 @@ router.post('/', (req, res) => {
 		return null;
 	}
 
-
 	// hit this with initial slack command
 	if(requestType.command === '/fist-oauth' && requestType.text === ''){     // TODO: update path to correct one
 
-    // console.log(surveyQ)
-
 		// send survey out
 		res.status(200).send(
-      // surveyQ
 			surveyToClass()
 		)
 	} else {
@@ -185,10 +179,9 @@ router.post('/', (req, res) => {
 				
 /************************************************/
 
-function surveyToClass() {
+async function surveyToClass() {
   
   // TODO: async await on this. first grab people, then send out survey.
-  let findPeople = new Promise((resolve, reject) => {
     console.log('******* this should hit 1st');
     
     const getConvMembers = {
@@ -204,7 +197,7 @@ function surveyToClass() {
       }
     }
     
-    request(getConvMembers, function (error, response, body) {
+    await request(getConvMembers, function (error, response, body) {
       let parsedJSON = {};
       
       // if (error) throw new Error(error);
@@ -212,16 +205,16 @@ function surveyToClass() {
       // console.log('############## postSurvey', getConvMembers)
       // console.log('############## response', response)
       // console.log('############## body', body)
-      console.log('############## body parse', JSON.parse(body))
+      // console.log('############## body parse', JSON.parse(body))
       parsedJSON = JSON.parse(body);
-      console.log('############## parsedJSON.member', parsedJSON.members)
+      // console.log('############## parsedJSON.member', parsedJSON.members)
       channelMembers = parsedJSON.members;
-      console.log('############## channel members', channelMembers)
+      // console.log('############## channel members', channelMembers)
       
       // grab everyone's name but the person invoking the survey
       let memberIndex = channelMembers.indexOf(pollRequestor);
       channelMembers.splice(memberIndex,1)
-      console.log('############## updated channelMembers', channelMembers)
+      // console.log('############## updated channelMembers', channelMembers)
       
       // return;
       resolve();
@@ -229,15 +222,11 @@ function surveyToClass() {
         reject();
       };
     })
-  })
   
-  findPeople.then(() => {
       console.log('******* this should hit 2nd');
       
       const qTextPortion = JSON.stringify(surveyQ.text[0]);
       const qAttachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
-      // const prettyPortion = '&pretty=1';  // no documentation availble about what this does
-
 
       // loop through users
       for (let person of channelMembers){
@@ -269,16 +258,8 @@ function surveyToClass() {
         })
       }
     }
-  )
-}
-
-
-
-
 
 /************************************************/
-							
-
 
 // posting survey form on slack
 router.post('/survey', (req, res) => {
@@ -406,9 +387,9 @@ function postSurvey(){
       
       if (error) throw new Error(error);
       console.log('############## error', error);
-      console.log('############## postSurveyResultsUpdate', postSurveyResultsUpdate)
+      // console.log('############## postSurveyResultsUpdate', postSurveyResultsUpdate)
       // console.log('############## response', response)
-      console.log('############## body', body)
+      // console.log('############## body', body)
       // let surveyResultsRes = JSON.parse(body)
       // console.log('############## body.message_ts', surveyResultsRes.message_ts)
       // timestamp = surveyResultsRes.message_ts;
@@ -436,13 +417,13 @@ function postSurvey(){
       
       if (error) throw new Error(error);
       console.log('############## error', error);
-      console.log('############## postSurveyResults', postSurveyResults)
+      // console.log('############## postSurveyResults', postSurveyResults)
       // console.log('############## response', response)
       // console.log('############## body', body)
       let surveyResultsRes = JSON.parse(body)
       // console.log('############## body.message_ts', surveyResultsRes.message_ts)
       timestamp = surveyResultsRes.ts;
-      console.log('############## timestamp', timestamp)
+      // console.log('############## timestamp', timestamp)
 
       return;
     })
@@ -451,11 +432,6 @@ function postSurvey(){
 /****************************************/
 
 module.exports = router;
-
-// https://api.slack.com/custom-integrations/legacy-tokens
-
-// https://api.slack.com/methods/chat.postEphemeral
-// https://api.slack.com/methods/chat.postMessage
 
 // https://stackoverflow.com/questions/32327858/how-to-send-a-post-request-from-node-js-express
 

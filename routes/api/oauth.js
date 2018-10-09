@@ -85,7 +85,7 @@ router.get('/slack/authorization', (req, res) => {
 })
 
 router.get('/success', (req, res) => {
-  res.json({
+  res.status(200).json({
     msg: "authentication success!"
   })
 })
@@ -459,27 +459,27 @@ function postSurvey(){
 
 
 
-		const postSurveyResults = {
-			url: postMessage+slackTokenPortion+channelPortion+resultsTextPortion+resultsAttachmentsPortion+prettyPortion,
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json; charset=utf-8',
-			}
-		}
-		request(postSurveyResults, function (error, response) {
-			const postSurveyResultsJSON = JSON.parse(response.body);
-			// console.log('############### response', response);
-			// console.log('##############initial# response.body', response.body);
-			// console.log('##############initial# response.body.ts', postSurveyResultsJSON.ts);
-			// console.log('##############initial# response.body.ts', response.body.messages.ts);
-			console.log('##############initial# postSurveyResults', postSurveyResults);
-			console.log('##############initial# error', error);
+		// const postSurveyResults = {
+		// 	url: postMessage+slackTokenPortion+channelPortion+resultsTextPortion+resultsAttachmentsPortion+prettyPortion,
+		// 	method: 'POST',
+		// 	headers: {
+		// 		'Content-Type': 'application/json; charset=utf-8',
+		// 	}
+		// }
+		// request(postSurveyResults, function (error, response) {
+		// 	const postSurveyResultsJSON = JSON.parse(response.body);
+		// 	// console.log('############### response', response);
+		// 	// console.log('##############initial# response.body', response.body);
+		// 	// console.log('##############initial# response.body.ts', postSurveyResultsJSON.ts);
+		// 	// console.log('##############initial# response.body.ts', response.body.messages.ts);
+		// 	console.log('##############initial# postSurveyResults', postSurveyResults);
+		// 	console.log('##############initial# error', error);
 			
-			timestamp.push(postSurveyResultsJSON.ts)
-			// console.log('##############initial# timestamp', timestamp);
+		// 	timestamp.push(postSurveyResultsJSON.ts)
+		// 	// console.log('##############initial# timestamp', timestamp);
 			
-			return;
-		});
+		// 	return;
+		// });
 	}
 }
 /****************************************/

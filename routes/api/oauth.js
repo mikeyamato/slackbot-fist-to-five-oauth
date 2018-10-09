@@ -161,6 +161,7 @@ router.post('/', (req, res) => {
 		fiveFingers = 0;
     recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
     channelMembers = [];
+    timestamp = '';
 
 		// console.log('**** resetting variables ****');
 		// console.log('**** fist', fist);

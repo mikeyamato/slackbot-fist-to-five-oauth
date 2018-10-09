@@ -198,6 +198,9 @@ router.post('/', (req, res) => {
 
 function surveyToClass() {
 
+  // TODO: async await on this. first grab people, then send out survey.
+  findPeople()
+
 	const postMessageUrl	= 'https://slack.com/api/chat.postMessage';
 
 	/***** choose one or update with different token *****/
@@ -236,6 +239,35 @@ function surveyToClass() {
 	});
 }
 
+
+function findPeople(){
+
+  const getConvMembersUrl	= 'https://slack.com/api/conversations.members';
+
+  const getConvMembers = {
+		method: 'GET',
+		url: getConvMembersUrl,
+    headers: {
+      Authorization: 'Bearer ' + accessToken,
+      'Content-Type': 'application/json; charset=utf-8'
+    },
+    body: `{  
+      "channel":"${channelId}"
+    }`
+	}
+
+	request(getConvMembers, function (error, response, body) {
+    
+    if (error) throw new Error(error);
+		console.log('############## error', error);
+    console.log('############## postSurvey', getConvMembers)
+    // console.log('############## response', response)
+    console.log('############## body', body)
+    console.log('############## body.members', body.members)
+		
+		return;
+	});
+}
 
 
 /************************************************/

@@ -246,14 +246,15 @@ function findPeople(){
 
   const getConvMembers = {
 		method: 'GET',
-		url: getConvMembersUrl,
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
-      'Content-Type': 'application/json; charset=utf-8'
+    url: getConvMembersUrl,
+    qs: { 
+      channel: `${channelId}`, 
+      pretty: '1' 
     },
-    body: `{  
-      "channel":"${channelId}"
-    }`
+    headers: { 
+      Authorization: 'Bearer ' + accessToken,
+      'Content-Type': 'application/x-www-form-urlencoded' 
+    }
 	}
 
 	request(getConvMembers, function (error, response, body) {
@@ -266,7 +267,8 @@ function findPeople(){
     console.log('############## body.members', body.members)
 		
 		return;
-	});
+  });
+  
 }
 
 

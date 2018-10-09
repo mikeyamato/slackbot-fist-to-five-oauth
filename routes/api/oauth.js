@@ -19,7 +19,7 @@ let recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers
 let channelId = '';  // this will be used for the running the survey in the appropriate channel
 let accessToken = '';  // not to be cleared out
 let refreshToken = '';  // not to be cleared out
-let channelMembers = [];
+// let channelMembers = [];
 let pollRequestor = '';
 
 const oauthAccessUrl	= 'https://slack.com/api/oauth.access';
@@ -139,7 +139,7 @@ router.post('/', (req, res) => {
 		fourFingers = 0;
 		fiveFingers = 0;
     recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
-    channelMembers = [];
+    // channelMembers = [];
     timestamp = '';
 
 		// console.log('**** resetting variables ****');
@@ -181,7 +181,7 @@ router.post('/', (req, res) => {
 
 function surveyToClass() {
   
-  let msgSent = false;
+  // let msgSent = false;
   // TODO: async await on this. first grab people, then send out survey.
   
   new Promise((resolve, reject) => {
@@ -211,7 +211,7 @@ function surveyToClass() {
       // console.log('############## body parse', JSON.parse(body))
       parsedJSON = JSON.parse(body);
       // console.log('############## parsedJSON.member', parsedJSON.members)
-      channelMembers = parsedJSON.members;
+      let channelMembers = parsedJSON.members;
       // console.log('############## channel members', channelMembers)
       
       // grab everyone's name but the person invoking the survey
@@ -220,14 +220,14 @@ function surveyToClass() {
       // console.log('############## updated channelMembers', channelMembers)
       
       // return;
-      resolve();
+      resolve(channelMembers);
       if (error)  {
         reject();
       };
     })
   })
   
-  .then(() => {
+  .then((channelMembers) => {
     console.log('******* this should hit 2nd');
     
     const qTextPortion = JSON.stringify(surveyQ.text[0]);
@@ -259,13 +259,13 @@ function surveyToClass() {
         // console.log('############## response', response)
         // console.log('############## body', body)
         let postSurveyRes = JSON.parse(body);
-        msgSent = postSurveyRes.ok;
+        let msgSent = postSurveyRes.ok;
         console.log('############## msgSent', msgSent)
       })
     }
   })
 
-  .then(() => {
+  .then((magSent) => {
     console.log('******* this should hit 3rd');
     // send requestor a confirmation msg that the survey went out
     if (msgSent){

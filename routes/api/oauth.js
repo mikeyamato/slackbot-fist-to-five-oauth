@@ -259,31 +259,35 @@ function surveyToClass() {
 
 
       // loop through users
-      const postSurvey = {  // TODO: update `user`
-        method: 'POST',
-        url: postEphemeralUrl,
-        headers: {
-          Authorization: 'Bearer ' + accessToken,
-          'Content-Type': 'application/json; charset=utf-8'
-        },
-        body: `{  
-          "channel":"${channelId}",
-          "user":"U9GCKCVL7",
-          "text":${textPortion},
-          "attachments": [${attachmentPortion}]
-        }`
-      }
+      for (let person of channelMembers){
 
-      request(postSurvey, function (error, response, body) {
-        
-        if (error) throw new Error(error);
-        console.log('############## error', error);
-        console.log('############## postSurvey', postSurvey)
-        // console.log('############## response', response)
-        console.log('############## body', body)
-        
-        return;
-      })
+        const postSurvey = {  // TODO: update `user`
+          method: 'POST',
+          url: postEphemeralUrl,
+          headers: {
+            Authorization: 'Bearer ' + accessToken,
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+          body: `{  
+            "channel": ${channelId},
+            "user": ${person},
+            "text": ${textPortion},
+            "attachments": [${attachmentPortion}]
+          }`
+        }
+  
+        request(postSurvey, function (error, response, body) {
+          
+          if (error) throw new Error(error);
+          console.log('############## error', error);
+          console.log('############## postSurvey', postSurvey)
+          // console.log('############## response', response)
+          console.log('############## body', body)
+          
+          return;
+        })
+
+      }
     }
   )
 }

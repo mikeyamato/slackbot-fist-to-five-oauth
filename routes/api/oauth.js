@@ -407,7 +407,7 @@ function postSurvey(){
 	const resultsTextPortionUpdate = '*Fist-to-Five Survey Updated*';
 	const resultsAttachmentsPortion = `[{"pretext": "Results...", "text": "fist: ${fist} \n one: ${oneFinger} \n two: ${twoFingers} \n three: ${threeFingers} \n four: ${fourFingers} \n five: ${fiveFingers}"}]`;
 
-	if(!timestamp){
+	if(timestamp){
     /***** update response *****/
     const postSurveyResultsUpdate = {  // TODO: update `user`
       method: 'POST',

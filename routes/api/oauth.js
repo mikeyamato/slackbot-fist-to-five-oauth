@@ -181,6 +181,7 @@ router.post('/', (req, res) => {
 
 function surveyToClass() {
   
+  let msgSent = false;
   // TODO: async await on this. first grab people, then send out survey.
   let findPeople = new Promise((resolve, reject) => {
     console.log('******* this should hit 1st');
@@ -226,75 +227,76 @@ function surveyToClass() {
   })
   
   findPeople.then(() => {
-      console.log('******* this should hit 2nd');
-      
-      const qTextPortion = JSON.stringify(surveyQ.text[0]);
-      const qAttachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
-
-      // loop through users
-      for (let person of channelMembers){
-
-        const postSurvey = {  // TODO: update `user`
-          method: 'POST',
-          url: postEphemeralUrl,
-          headers: {
-            Authorization: 'Bearer ' + accessToken,
-            'Content-Type': 'application/json; charset=utf-8'
-          },
-          body: `{  
-            "channel": "${channelId}",
-            "user": "${person}",
-            "text": ${qTextPortion},
-            "attachments": [${qAttachmentPortion}]
-          }`
-        }
-  
-        request(postSurvey, function (error, response, body) {
-          
-          if (error) throw new Error(error);
-          console.log('############## error', error);
-          console.log('############## postSurvey', postSurvey)
-          // console.log('############## response', response)
-          console.log('############## body', body)
-          let postSurveyRes = JSON.parse(body);
-          let msgSent = postSurveyRes.ok;
-          console.log('############## msgSent', msgSent)
-        })
-        .then(() => {
-
-          // send requestor a confirmation msg that the survey went out
-            const confirmMsg = {  
-              method: 'POST',
-              url: postEphemeralUrl,
-              headers: {
-                Authorization: 'Bearer ' + accessToken,
-                'Content-Type': 'application/json; charset=utf-8'
-              },
-              body: `{  
-                "channel": "${channelId}",
-                "user": "${pollRequestor}",
-                "text": "Bombs away!",
-              }`
-            }
+    console.log('******* this should hit 2nd');
     
-            request(postSurvey, function (error, response, body) {
-              
-              if (error) throw new Error(error);
-              console.log('############## error', error);
-              console.log('############## postSurvey', postSurvey)
-              // console.log('############## response', response)
-              console.log('############## body', body)
-              
-              return;
-            })
-          }
-        )
-        
+    const qTextPortion = JSON.stringify(surveyQ.text[0]);
+    const qAttachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
+
+    // loop through users
+    for (let person of channelMembers){
+
+      const postSurvey = {  // TODO: update `user`
+        method: 'POST',
+        url: postEphemeralUrl,
+        headers: {
+          Authorization: 'Bearer ' + accessToken,
+          'Content-Type': 'application/json; charset=utf-8'
+        },
+        body: `{  
+          "channel": "${channelId}",
+          "user": "${person}",
+          "text": ${qTextPortion},
+          "attachments": [${qAttachmentPortion}]
+        }`
       }
-      
+
+      request(postSurvey, function (error, response, body) {
+        
+        if (error) throw new Error(error);
+        console.log('############## error', error);
+        console.log('############## postSurvey', postSurvey)
+        // console.log('############## response', response)
+        console.log('############## body', body)
+        let postSurveyRes = JSON.parse(body);
+        let msgSent = postSurveyRes.ok;
+        console.log('############## msgSent', msgSent)
+      })
     }
-  )
+  })
+
+  findPeople.then(() => {;
+
+    // send requestor a confirmation msg that the survey went out
+    if (findPeople === true){
+      const confirmMsg = {  
+        method: 'POST',
+        url: postEphemeralUrl,
+        headers: {
+          Authorization: 'Bearer ' + accessToken,
+          'Content-Type': 'application/json; charset=utf-8'
+        },
+        body: `{  
+          "channel": "${channelId}",
+          "user": "${pollRequestor}",
+          "text": "Bombs away!",
+        }`
+      }
+
+      request(postSurvey, function (error, response, body) {
+        
+        if (error) throw new Error(error);
+        console.log('############## error', error);
+        console.log('############## postSurvey', postSurvey)
+        // console.log('############## response', response)
+        console.log('############## body', body)
+        
+        return;
+      })
+    }
+  })
 }
+      
+
 
 /************************************************/
 

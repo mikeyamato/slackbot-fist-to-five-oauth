@@ -264,36 +264,36 @@ function surveyToClass() {
     }
   })
 
-  .then(() => {
-    console.log('******* this should hit 3rd');
-    // send requestor a confirmation msg that the survey went out
-    if (findPeople === true){
-      const confirmMsg = {  
-        method: 'POST',
-        url: postEphemeralUrl,
-        headers: {
-          Authorization: 'Bearer ' + accessToken,
-          'Content-Type': 'application/json; charset=utf-8'
-        },
-        body: `{  
-          "channel": "${channelId}",
-          "user": "${pollRequestor}",
-          "text": "Bombs away!",
-        }`
-      }
+  // .then(() => {
+  //   console.log('******* this should hit 3rd');
+  //   // send requestor a confirmation msg that the survey went out
+  //   if (findPeople === true){
+  //     const confirmMsg = {  
+  //       method: 'POST',
+  //       url: postEphemeralUrl,
+  //       headers: {
+  //         Authorization: 'Bearer ' + accessToken,
+  //         'Content-Type': 'application/json; charset=utf-8'
+  //       },
+  //       body: `{  
+  //         "channel": "${channelId}",
+  //         "user": "${pollRequestor}",
+  //         "text": "Bombs away!",
+  //       }`
+  //     }
 
-      request(confirmMsg, function (error, response, body) {
+  //     request(confirmMsg, function (error, response, body) {
         
-        if (error) throw new Error(error);
-        console.log('############## error', error);
-        console.log('############## confirmMsg', confirmMsg)
-        // console.log('############## response', response)
-        console.log('############## body', body)
+  //       if (error) throw new Error(error);
+  //       console.log('############## error', error);
+  //       console.log('############## confirmMsg', confirmMsg)
+  //       // console.log('############## response', response)
+  //       console.log('############## body', body)
         
-        return;
-      })
-    }
-  })
+  //       return;
+  //     })
+  //   }
+  // })
 }
       
 

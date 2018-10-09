@@ -179,15 +179,10 @@ router.post('/', (req, res) => {
 				
 /************************************************/
 
-async function surveyToClass() {
+function surveyToClass() {
   
   let msgSent = false;
   // TODO: async await on this. first grab people, then send out survey.
-
-  // 1> getChannelMembers
-  // 2> sendMsgToChannel
-  // 3> msgToRequestor
-  
 
   let getChannelMembers = () => {
     console.log('******* this should hit 1st');
@@ -225,7 +220,10 @@ async function surveyToClass() {
       // console.log('############## updated channelMembers', channelMembers)
       
       // return;
-      
+      resolve();
+      if (error)  {
+        reject();
+      };
     })
   }
 
@@ -263,6 +261,11 @@ async function surveyToClass() {
         let postSurveyRes = JSON.parse(body);
         msgSent = postSurveyRes.ok;
         console.log('############## msgSent', msgSent)
+
+        resolve();
+        if (error)  {
+          reject();
+        };
       })
     }
   }
@@ -271,7 +274,7 @@ async function surveyToClass() {
   let msgToRequestor = () => {
     console.log('******* this should hit 3rd');
     // send requestor a confirmation msg that the survey went out
-    if (msgSent){
+    if (findPeople){
       const confirmMsg = {  
         method: 'POST',
         url: postEphemeralUrl,
@@ -294,18 +297,18 @@ async function surveyToClass() {
         // console.log('############## response', response)
         console.log('############## body', body)
         
-        return;
       })
     }
   }
-
-  try {
-    await getChannelMembers();
-    await sendMsgToChannel();
-    await msgToRequestor();
-  }catch(err){
-    console.log('*********** err', err)
-  }
+  var step1 = new Promise((resolve, reject) => {
+    getChannelMembers();
+  });
+  step1.then(() => {
+    sendMsgToChannel();
+  });
+  step1.then(() => {
+    msgToRequestor();
+  });
 
 }
       

@@ -140,8 +140,8 @@ router.post('/', (req, res) => {
 	const requestType = req.body || null;
 	
 	// console.log('**** 1', req)
-	// console.log('**** 2', req.body);
-	console.log('**** requestType', requestType);
+	console.log('**** req.body', req.body);
+	// console.log('**** requestType', requestType);
 	
 	
 	// reset variables

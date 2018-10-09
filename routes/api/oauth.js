@@ -215,27 +215,27 @@ function surveyToClass() {
       // console.log('############## channel members', channelMembers)
       
       // grab everyone's name but the person invoking the survey
-      channelMembers.filter(a => a !== pollRequestor);  // `a` is arbitrary
+      let filteredMembers = channelMembers.filter(a => a !== pollRequestor);  // `a` is arbitrary
       // channelMembers.splice(memberIndex,1)
       // console.log('############## updated channelMembers', channelMembers)
       
       // return;
-      resolve(channelMembers);
+      resolve(filteredMembers);
       if (error)  {
         reject();
       };
     })
   })
   
-  .then((channelMembers) => {
+  .then((filteredMembers) => {
     console.log('******* this should hit 2nd');
-    console.log('############## 2nd channelMembers',channelMembers);
+    console.log('############## 2nd filteredMembers',filteredMembers);
     
     const qTextPortion = JSON.stringify(surveyQ.text[0]);
     const qAttachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
 
     // loop through users
-    for (let person of channelMembers){
+    for (let person of filteredMembers){
 
       const postSurvey = {  // TODO: update `user`
         method: 'POST',

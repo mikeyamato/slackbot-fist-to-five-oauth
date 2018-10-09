@@ -242,11 +242,11 @@ function surveyToClass() {
       console.log('############## updated channelMembers', channelMembers)
       
       // return;
+      resolve();
+      if (err)  {
+        reject();
+      };
     })
-    resolve();
-    if (err)  {
-      reject();
-    };
   })
   
   findPeople.then(() => {

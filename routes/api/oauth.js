@@ -25,6 +25,9 @@ let refreshToken = '';  // not to be cleared out
 let channelMembers = [];
 let pollRequestor = '';
 
+const postEphemeralUrl	= 'https://slack.com/api/chat.postEphemeral';
+let timestamp = '';
+
 // TODO: add GET request to grab member names https://api.slack.com/methods/conversations.members
 
 
@@ -139,7 +142,7 @@ router.post('/', (req, res) => {
 	
 	// console.log('**** 1', req)
 	// console.log('**** 2', req.body);
-	// console.log('**** requestType', requestType);
+	console.log('**** requestType', requestType);
 	
 	
 	// reset variables
@@ -251,10 +254,9 @@ function surveyToClass() {
   
   findPeople.then(() => {
       console.log('******* this should hit 2nd');
-      const postEphemeralUrl	= 'https://slack.com/api/chat.postEphemeral';
       
-      const textPortion = JSON.stringify(surveyQ.text[0]);
-      const attachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
+      const qTextPortion = JSON.stringify(surveyQ.text[0]);
+      const qAttachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
       // const prettyPortion = '&pretty=1';  // no documentation availble about what this does
 
 
@@ -271,8 +273,8 @@ function surveyToClass() {
           body: `{  
             "channel": "${channelId}",
             "user": "${person}",
-            "text": ${textPortion},
-            "attachments": [${attachmentPortion}]
+            "text": ${qTextPortion},
+            "attachments": [${qAttachmentPortion}]
           }`
         }
   
@@ -400,25 +402,18 @@ router.post('/survey', (req, res) => {
 /***** POST survey results to Slack *****/
 /****************************************/
 function postSurvey(){
-	const postMessage	= 'https://slack.com/api/chat.postMessage';
 	const updateMessage = 'https://slack.com/api/chat.update';
 
-	/***** choose one or update with different token *****/
-		const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotTonkotsu;   
-		// const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotUclaBootcamp;  
-	/*****************************************************/
-	
-	const channelPortion = `&channel=${channelId}`;  
-	const textPortion = '&text=*Fist-to-Five Survey*';
-	const textPortionUpdate = '&text=*Fist-to-Five Survey Updated*';
-	const attachmentsPortion = '&attachments='+encodeURIComponent(`[{"pretext": "Results...", "text": "fist: ${fist} \n one: ${oneFinger} \n two: ${twoFingers} \n three: ${threeFingers} \n four: ${fourFingers} \n five: ${fiveFingers}"}]`);
+	const resultsTextPortion = '&text=*Fist-to-Five Survey*';
+	const resultsTextPortionUpdate = '&text=*Fist-to-Five Survey Updated*';
+	const resultsAttachmentsPortion = '&attachments='+encodeURIComponent(`[{"pretext": "Results...", "text": "fist: ${fist} \n one: ${oneFinger} \n two: ${twoFingers} \n three: ${threeFingers} \n four: ${fourFingers} \n five: ${fiveFingers}"}]`);  // NOTE: what is this for???
 	const tsPortion = '&ts=' + timestamp[0];
 	const prettyPortion = '&pretty=1';  // no documentation availble about what this does
 
 	if(timestamp.length){
 		/***** update POST *****/
 		const postUpdatedSurveyResults = {
-			url: updateMessage+slackTokenPortion+channelPortion+textPortionUpdate+attachmentsPortion+tsPortion+prettyPortion,
+			url: updateMessage+slackTokenPortion+channelPortion+resultsTextPortionUpdate+resultsAttachmentsPortion+tsPortion+prettyPortion,
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8',
@@ -433,9 +428,41 @@ function postSurvey(){
 			return;
 		});
 	} else {
-		/***** initial POST *****/
+    /***** initial POST *****/
+    const postSurveyResults = {  // TODO: update `user`
+      method: 'POST',
+      url: postEphemeralUrl,
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      body: `{  
+        "channel": "${channelId}",
+        "user": "${pollRequestor}",
+        "text": ${resultsTextPortion},
+        "attachments": [${qAttachmentPortion}]
+      }`
+    }
+
+    request(postSurveyResults, function (error, response, body) {
+      
+      if (error) throw new Error(error);
+      console.log('############## error', error);
+      console.log('############## postSurvey', postSurveyResults)
+      // console.log('############## response', response)
+      console.log('############## body', body)
+      
+      return;
+    })
+
+
+
+
+
+
+
 		const postSurveyResults = {
-			url: postMessage+slackTokenPortion+channelPortion+textPortion+attachmentsPortion+prettyPortion,
+			url: postMessage+slackTokenPortion+channelPortion+resultsTextPortion+resultsAttachmentsPortion+prettyPortion,
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8',

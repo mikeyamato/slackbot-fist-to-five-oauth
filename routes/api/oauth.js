@@ -246,7 +246,7 @@ function surveyToClass() {
   })
   
   findPeople.then(
-    function something(){
+    function(){
       console.log('******* this should hit 2nd');
       const postMessageUrl	= 'https://slack.com/api/chat.postMessage';
 

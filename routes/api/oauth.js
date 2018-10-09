@@ -130,7 +130,7 @@ router.post('/', (req, res) => {
 		channelId = requestType.channel_id;
     console.log('**** channel id', channelId);
     pollRequestor = requestType.user_id;
-    console.log('**** user id', pollRequestor);
+    console.log('**** pollRequestor', pollRequestor);
 
 		fist = 0;
 		oneFinger = 0;
@@ -212,7 +212,7 @@ function surveyToClass() {
       parsedJSON = JSON.parse(body);
       // console.log('############## parsedJSON.member', parsedJSON.members)
       let channelMembers = parsedJSON.members;
-      // console.log('############## channel members', channelMembers)
+      console.log('############## channel members', channelMembers)
       
       // grab everyone's name but the person invoking the survey
       let memberIndex = channelMembers.indexOf(pollRequestor);

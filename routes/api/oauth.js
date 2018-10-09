@@ -29,6 +29,7 @@ const oauthAccessUrl	= 'https://slack.com/api/oauth.access';
 const getConvMembersUrl	= 'https://slack.com/api/conversations.members';
 const postEphemeralUrl	= 'https://slack.com/api/chat.postEphemeral';
 const postMessageUrl = 'https://slack.com/api/chat.postMessage';
+const updateUrl = 'https://slack.com/api/chat.update';
 
 
 // TODO: add GET request to grab member names https://api.slack.com/methods/conversations.members

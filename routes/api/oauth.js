@@ -140,7 +140,7 @@ router.post('/', (req, res) => {
 	const requestType = req.body || null;
 	
 	// console.log('**** 1', req)
-	console.log('**** req.body', req.body);
+	// console.log('**** req.body', req.body);
 	// console.log('**** requestType', requestType);
 	
 	
@@ -167,7 +167,6 @@ router.post('/', (req, res) => {
 		// console.log('**** threeFingers', threeFingers);
 		// console.log('**** fourFingers', fourFingers);
 		// console.log('**** fiveFingers', fiveFingers);
-		// console.log('**** timestamp', timestamp);
 		// console.log('**** recordSurvey', recordSurvey);
 		// console.log('**** channelId', channelId);
 		// console.log('*****************************');
@@ -402,9 +401,9 @@ router.post('/survey', (req, res) => {
 function postSurvey(){
 	const updateMessage = 'https://slack.com/api/chat.update';
 
-	const resultsTextPortion = '&text=*Fist-to-Five Survey*';
+	const resultsTextPortion = '*Fist-to-Five Survey*';
 	const resultsTextPortionUpdate = '&text=*Fist-to-Five Survey Updated*';
-	const resultsAttachmentsPortion = '&attachments='+encodeURIComponent(`[{"pretext": "Results...", "text": "fist: ${fist} \n one: ${oneFinger} \n two: ${twoFingers} \n three: ${threeFingers} \n four: ${fourFingers} \n five: ${fiveFingers}"}]`);  // NOTE: what is this for???
+	const resultsAttachmentsPortion = `[{"pretext": "Results...", "text": "fist: ${fist} \n one: ${oneFinger} \n two: ${twoFingers} \n three: ${threeFingers} \n four: ${fourFingers} \n five: ${fiveFingers}"}]`;
 	const tsPortion = '&ts=' + timestamp[0];
 	const prettyPortion = '&pretty=1';  // no documentation availble about what this does
 
@@ -438,7 +437,7 @@ function postSurvey(){
         "channel": "${channelId}",
         "user": "${pollRequestor}",
         "text": ${resultsTextPortion},
-        "attachments": [${qAttachmentPortion}]
+        "attachments": ${resultsAttachmentsPortion}
       }`
     }
 
@@ -449,6 +448,7 @@ function postSurvey(){
       console.log('############## postSurvey', postSurveyResults)
       // console.log('############## response', response)
       console.log('############## body', body)
+      console.log('############## body.message_ts', body.message_ts)
       
       return;
     })

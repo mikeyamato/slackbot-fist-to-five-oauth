@@ -436,7 +436,7 @@ function postSurvey(){
       body: `{  
         "channel": "${channelId}",
         "user": "${pollRequestor}",
-        "text": ${resultsTextPortion},
+        "text": "${resultsTextPortion}",
         "attachments": ${resultsAttachmentsPortion}
       }`
     }

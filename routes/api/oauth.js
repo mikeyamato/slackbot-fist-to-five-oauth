@@ -17,7 +17,7 @@ let twoFingers = 0;
 let threeFingers = 0;
 let fourFingers = 0;
 let fiveFingers = 0;
-let timestamp = [];
+let timestamp = '';
 let recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
 let channelId = '';  // this will be used for the running the survey in the appropriate channel
 let accessToken = '';  // not to be cleared out
@@ -448,8 +448,11 @@ function postSurvey(){
       console.log('############## postSurvey', postSurveyResults)
       // console.log('############## response', response)
       console.log('############## body', body)
-      console.log('############## body.message_ts', body.message_ts)
-      
+      let surveyResultsRes = JSON.parse(body)
+      console.log('############## body.message_ts', surveyResultsRes.message_ts)
+      timestamp = surveyResultsRes.message_ts;
+      console.log('############## timestamp', timestamp)
+
       return;
     })
 

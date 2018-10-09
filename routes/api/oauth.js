@@ -271,7 +271,7 @@ async function surveyToClass() {
   let msgToRequestor = () => {
     console.log('******* this should hit 3rd');
     // send requestor a confirmation msg that the survey went out
-    if (findPeople){
+    if (msgSent){
       const confirmMsg = {  
         method: 'POST',
         url: postEphemeralUrl,

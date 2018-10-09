@@ -261,11 +261,12 @@ function surveyToClass() {
         let postSurveyRes = JSON.parse(body);
         let msgSent = postSurveyRes.ok;
         console.log('############## msgSent', msgSent)
+        return msgSent;
       })
     }
   })
 
-  .then((magSent) => {
+  .then((msgSent) => {
     console.log('******* this should hit 3rd');
     // send requestor a confirmation msg that the survey went out
     if (msgSent){

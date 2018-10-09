@@ -251,7 +251,7 @@ function surveyToClass() {
   
   findPeople.then(() => {
       console.log('******* this should hit 2nd');
-      const postMessageUrl	= 'https://slack.com/api/chat.postEphemeral';
+      const postEphemeralUrl	= 'https://slack.com/api/chat.postEphemeral';
       
       const textPortion = JSON.stringify(surveyQ.text[0]);
       const attachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
@@ -261,14 +261,14 @@ function surveyToClass() {
       // loop through users
       const postSurvey = {  // TODO: update `user`
         method: 'POST',
-        url: postMessageUrl,
+        url: postEphemeralUrl,
         headers: {
           Authorization: 'Bearer ' + accessToken,
           'Content-Type': 'application/json; charset=utf-8'
         },
         body: `{  
           "channel":"${channelId}",
-          "user":"U9GCKCVL7"
+          "user":"U9GCKCVL7",
           "text":${textPortion},
           "attachments": [${attachmentPortion}]
         }`

@@ -26,6 +26,7 @@ let channelMembers = [];
 let pollRequestor = '';
 
 const postEphemeralUrl	= 'https://slack.com/api/chat.postEphemeral';
+const postMessageUrl = 'https://slack.com/api/chat.postMessage';
 const updateUrl = 'https://slack.com/api/chat.update';
 
 
@@ -441,16 +442,15 @@ function postSurvey(){
     });
 	} else {
     /***** initial POST *****/
-    const postSurveyResults = {  // TODO: update `user`
+    const postSurveyResults = {  
       method: 'POST',
-      url: postEphemeralUrl,
+      url: postMessageUrl,
       headers: {
         Authorization: 'Bearer ' + accessToken,
         'Content-Type': 'application/json; charset=utf-8'
       },
       body: `{  
         "channel": "${channelId}",
-        "user": "${pollRequestor}",
         "text": "${resultsTextPortion}",
         "attachments": ${resultsAttachmentsPortion}
       }`
@@ -465,7 +465,7 @@ function postSurvey(){
       // console.log('############## body', body)
       let surveyResultsRes = JSON.parse(body)
       // console.log('############## body.message_ts', surveyResultsRes.message_ts)
-      timestamp = surveyResultsRes.message_ts;
+      timestamp = surveyResultsRes.ts;
       console.log('############## timestamp', timestamp)
 
       return;

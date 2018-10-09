@@ -269,8 +269,8 @@ function surveyToClass() {
             'Content-Type': 'application/json; charset=utf-8'
           },
           body: `{  
-            "channel": ${channelId},
-            "user": ${person},
+            "channel": "${channelId}",
+            "user": "${person}",
             "text": ${textPortion},
             "attachments": [${attachmentPortion}]
           }`
@@ -286,7 +286,6 @@ function surveyToClass() {
           
           return;
         })
-
       }
     }
   )

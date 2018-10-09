@@ -251,19 +251,15 @@ function surveyToClass() {
   
   findPeople.then(() => {
       console.log('******* this should hit 2nd');
-      const postMessageUrl	= 'https://slack.com/api/chat.postMessage';
-
-      /***** choose one or update with different token *****/
-      // const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotTonkotsu;   
-      // const slackTokenPortion = '?token=' + slackTokenPath.slackTokenBotUclaBootcamp;  
-      /*****************************************************/
+      const postMessageUrl	= 'https://slack.com/api/chat.postEphemeral';
       
-      // const channelPortion = `?channel=${channelId}`;  
       const textPortion = JSON.stringify(surveyQ.text[0]);
       const attachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
       // const prettyPortion = '&pretty=1';  // no documentation availble about what this does
 
-      const postSurvey = {
+
+      // loop through users
+      const postSurvey = {  // TODO: update `user`
         method: 'POST',
         url: postMessageUrl,
         headers: {
@@ -272,6 +268,7 @@ function surveyToClass() {
         },
         body: `{  
           "channel":"${channelId}",
+          "user":"U9GCKCVL7"
           "text":${textPortion},
           "attachments": [${attachmentPortion}]
         }`
@@ -292,41 +289,7 @@ function surveyToClass() {
 }
 
 
-function findPeople(){
 
-  const getConvMembersUrl	= 'https://slack.com/api/conversations.members';
-
-  const getConvMembers = {
-		method: 'GET',
-    url: getConvMembersUrl,
-    qs: { 
-      channel: `${channelId}`, 
-      pretty: '1' 
-    },
-    headers: { 
-      Authorization: 'Bearer ' + accessToken,
-      'Content-Type': 'application/x-www-form-urlencoded' 
-    }
-	}
-
-	request(getConvMembers, function (error, response, body) {
-    let parsedJSON = {};
-
-    if (error) throw new Error(error);
-		console.log('############## error', error);
-    // console.log('############## postSurvey', getConvMembers)
-    // console.log('############## response', response)
-    // console.log('############## body', body)
-    console.log('############## body parse', JSON.parse(body))
-    parsedJSON = JSON.parse(body);
-    console.log('############## parsedJSON.member', parsedJSON.members)
-    channelMembers = parsedJSON.members;
-    console.log('############## channel members', channelMembers)
-		
-		return;
-  });
-  
-}
 
 
 /************************************************/

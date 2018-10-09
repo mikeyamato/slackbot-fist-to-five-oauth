@@ -200,7 +200,7 @@ async function surveyToClass() {
     await request(getConvMembers, function (error, response, body) {
       let parsedJSON = {};
       
-      // if (error) throw new Error(error);
+      if (error) throw new Error(error);
       console.log('############## error', error);
       // console.log('############## postSurvey', getConvMembers)
       // console.log('############## response', response)
@@ -217,10 +217,7 @@ async function surveyToClass() {
       // console.log('############## updated channelMembers', channelMembers)
       
       // return;
-      resolve();
-      if (error)  {
-        reject();
-      };
+      
     })
   
       console.log('******* this should hit 2nd');

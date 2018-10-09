@@ -23,6 +23,7 @@ let channelId = '';  // this will be used for the running the survey in the appr
 let accessToken = '';  // not to be cleared out
 let refreshToken = '';  // not to be cleared out
 let channelMembers = [];
+let pollRequestor = '';
 
 // TODO: add GET request to grab member names https://api.slack.com/methods/conversations.members
 
@@ -138,7 +139,7 @@ router.post('/', (req, res) => {
 	
 	// console.log('**** 1', req)
 	// console.log('**** 2', req.body);
-	// console.log('**** 3', requestType);
+	console.log('**** requestType', requestType);
 	
 	
 	// reset variables
@@ -202,6 +203,8 @@ function surveyToClass() {
 
   // TODO: async await on this. first grab people, then send out survey.
   findPeople()
+  // TODO: grab everyone's name but the person invoking the survey
+  // TODO: return the survey to the person who invoked the survey
 
 	const postMessageUrl	= 'https://slack.com/api/chat.postMessage';
 

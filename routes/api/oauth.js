@@ -258,15 +258,16 @@ function findPeople(){
 	}
 
 	request(getConvMembers, function (error, response, body) {
-    
+    let parsedJSON = {};
+
     if (error) throw new Error(error);
 		console.log('############## error', error);
     console.log('############## postSurvey', getConvMembers)
     // console.log('############## response', response)
     console.log('############## body', body)
-    console.log('############## body.members', body.members)
-    console.log('############## response', response)
-    console.log('############## response.body.members', response.body.members)
+    console.log('############## body parse', JSON.parse(body))
+    parsedJSON = JSON.parse(body);
+    console.log('############## parsedJSON.member', parsedJSON.member)
 
 		
 		return;

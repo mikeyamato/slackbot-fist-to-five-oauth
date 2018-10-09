@@ -258,7 +258,7 @@ function surveyToClass() {
         // console.log('############## response', response)
         console.log('############## body', body)
         let postSurveyRes = JSON.parse(body);
-        let msgSent = postSurveyRes.ok;
+        msgSent = postSurveyRes.ok;
         console.log('############## msgSent', msgSent)
       })
     }

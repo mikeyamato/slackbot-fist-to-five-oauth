@@ -22,6 +22,7 @@ let recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers
 let channelId = '';  // this will be used for the running the survey in the appropriate channel
 let accessToken = '';  // not to be cleared out
 let refreshToken = '';  // not to be cleared out
+let channelMembers = [];
 
 // TODO: add GET request to grab member names https://api.slack.com/methods/conversations.members
 
@@ -153,6 +154,7 @@ router.post('/', (req, res) => {
 		fiveFingers = 0;
 		timestamp = [];
     recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
+    channelMembers = [];
 
 		// console.log('**** resetting variables ****');
 		// console.log('**** fist', fist);
@@ -262,13 +264,14 @@ function findPeople(){
 
     if (error) throw new Error(error);
 		console.log('############## error', error);
-    console.log('############## postSurvey', getConvMembers)
+    // console.log('############## postSurvey', getConvMembers)
     // console.log('############## response', response)
-    console.log('############## body', body)
+    // console.log('############## body', body)
     console.log('############## body parse', JSON.parse(body))
     parsedJSON = JSON.parse(body);
-    console.log('############## parsedJSON.member', parsedJSON.member)
-
+    console.log('############## parsedJSON.member', parsedJSON.members)
+    channelMembers = parsedJSON.members;
+    console.log('############## channel members', channelMembers)
 		
 		return;
   });

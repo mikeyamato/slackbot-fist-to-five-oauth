@@ -61,7 +61,7 @@ router.get('/slack/authorization', (req, res) => {
     refreshToken = accessTokenJSON.refresh_token;
     countdown(tokenExpireTime)
     
-    res.status(200).redirect('/success');
+    res.status(200).redirect('/api/oauth/success');
 
     return;
   });

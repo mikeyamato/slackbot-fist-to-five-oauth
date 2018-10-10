@@ -514,33 +514,33 @@ function postSurvey(){
 	const resultsAttachmentsPortion = `[{"pretext": "Results...", 
     "fields": [
       {
-        "title":":fist-zero: FIST",
-        "value":"${fist}",
+        "title":"FIST",
+        "value":":fist-zero: ${fist}",
         "short": true
       },
       {
-        "title":":fist-one: ONE",
-        "value":"${oneFinger}",
+        "title":"ONE",
+        "value":":fist-one: ${oneFinger}",
         "short": true
       },
       {
-        "title":":fist-two: TWO",
-        "value":"${twoFingers}",
+        "title":"TWO",
+        "value":":fist-two: ${twoFingers}",
         "short": true
       },
       {
-        "title":":fist-three: THREE",
-        "value":"${threeFingers}",
+        "title":"THREE",
+        "value":":fist-three: ${threeFingers}",
         "short": true
       },
       {
-        "title":":fist-four: FOUR",
-        "value":"${fourFingers}",
+        "title":"FOUR",
+        "value":":fist-four: ${fourFingers}",
         "short": true
       },
       {
-        "title":":fist-five: FIVE",
-        "value":"${fiveFingers}",
+        "title":"FIVE",
+        "value":":fist-five: ${fiveFingers}",
         "short": true
       }
     ]

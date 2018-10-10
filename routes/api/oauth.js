@@ -550,6 +550,7 @@ function postSurvey(){
       body: `{  
         "channel": "${channelId}",
         "ts": "${timestamp}",
+        "as_user": "false",
         "username": "Not a Bot",
         "icon_emoji": "${singleFoodEmoji}",
         "attachments": ${resultsAttachmentsPortion}
@@ -581,6 +582,7 @@ function postSurvey(){
       },
       body: `{  
         "channel": "${channelId}",
+        "as_user": "false",
         "username": "Not a Bot",
         "icon_emoji": "${singleFoodEmoji}",
         "attachments": ${resultsAttachmentsPortion}

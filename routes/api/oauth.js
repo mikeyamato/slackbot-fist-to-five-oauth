@@ -112,7 +112,7 @@ function refreshAccessToken(){
     // console.log('############### access token:', accessTokenJSON.access_token)
     accessToken = accessTokenJSON.access_token;
     console.log('############### access refresh token:', accessToken)
-    console.log('############### token Expire Time:', tokenExpireTime)
+    console.log('############### token expires in (seconds):', tokenExpireTime)
     countdown(tokenExpireTime)
     
     return;
@@ -160,7 +160,7 @@ router.post('/', (req, res) => {
     // checks to see if value is assigned to the access token
     if (accessToken === ''){
       refreshAccessToken()
-      console.log('############## access token requested')
+      console.log('############### access token requested')
     }
 
 		res.status(200).send(

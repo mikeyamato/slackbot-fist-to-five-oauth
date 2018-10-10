@@ -50,7 +50,6 @@ module.exports.attachments = [
 			}
 		]
 	}
-// "response_type": "in_channel"  // goes to everyone. comment out if it should only go to the person evoking it
 ]
 
 

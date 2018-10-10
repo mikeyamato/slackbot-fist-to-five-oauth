@@ -157,6 +157,12 @@ router.post('/', (req, res) => {
     username = requestType.user_name; 
     console.log('**** user_name', username);
 
+    // checks to see if value is assigned to the access token
+    if (accessToken === ''){
+      refreshAccessToken()
+      console.log('############## access token requested')
+    }
+
 		res.status(200).send(
 			{
 				"text": "All reset.\n Now run `/fist-to-five` to start the poll. \n :thumbsup_all:",

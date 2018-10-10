@@ -219,7 +219,7 @@ function surveyToClass() {
       // console.log('############## postSurvey', getConvMembers)
       // console.log('############## response', response)
       // console.log('############## body', body)
-      console.log('############## body parse', JSON.parse(body))
+      // console.log('############## body parse', JSON.parse(body))
       parsedJSON = JSON.parse(body);
 
       if (parsedJSON.error === 'invalid_auth' || parsedJSON.error === 'not_authed'){
@@ -227,9 +227,9 @@ function surveyToClass() {
         console.log('############## try the slash command again');
       } else {
 
-        console.log('############## parsedJSON.member', parsedJSON.members)
+        // console.log('############## parsedJSON.member', parsedJSON.members)
         channelMembers = parsedJSON.members;
-        console.log('############## channel members', channelMembers)
+        // console.log('############## channel members', channelMembers)
         
         // grab everyone's name but the person invoking the survey
         filteredMembers = channelMembers.filter(a => a !== pollRequestor);  // `a` is arbitrary

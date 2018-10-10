@@ -132,8 +132,8 @@ router.post('/', (req, res) => {
     console.log('**** channel id', channelId);
     pollRequestor = requestType.user_id;
     console.log('**** pollRequestor id', pollRequestor);
-    // username = requestType.user_name; 
-    // console.log('**** user_name', user_name);
+    username = requestType.user_name; 
+    console.log('**** user_name', username);
 
 		fist = 0;
 		oneFinger = 0;

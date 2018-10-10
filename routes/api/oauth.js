@@ -538,6 +538,14 @@ function postSurvey(){
     ]
   }]`;
 
+  // TODO: when switching away from workspace apps, include the following three
+  // arguments in the 'body' of both requests below
+  // ***************************************
+  // "as_user": "false",
+  // "username": "Not a Bot",
+  // "icon_emoji": "${singleFoodEmoji}",
+  // ***************************************
+
 	if(timestamp){
     /***** update response *****/
     const postSurveyResultsUpdate = {  // TODO: update `user`
@@ -550,9 +558,6 @@ function postSurvey(){
       body: `{  
         "channel": "${channelId}",
         "ts": "${timestamp}",
-        "as_user": "false",
-        "username": "Not a Bot",
-        "icon_emoji": "${singleFoodEmoji}",
         "attachments": ${resultsAttachmentsPortion}
       }`
     }
@@ -563,7 +568,7 @@ function postSurvey(){
       console.log('############## error', error);
       // console.log('############## postSurveyResultsUpdate', postSurveyResultsUpdate)
       // console.log('############## response', response)
-      console.log('############## updated results body', body)
+      // console.log('############## updated results body', body)
       // let surveyResultsRes = JSON.parse(body)
       // console.log('############## body.message_ts', surveyResultsRes.message_ts)
       // timestamp = surveyResultsRes.message_ts;
@@ -582,9 +587,6 @@ function postSurvey(){
       },
       body: `{  
         "channel": "${channelId}",
-        "as_user": "false",
-        "username": "Not a Bot",
-        "icon_emoji": "${singleFoodEmoji}",
         "attachments": ${resultsAttachmentsPortion}
       }`
     }
@@ -593,9 +595,9 @@ function postSurvey(){
       
       if (error) throw new Error(error);
       console.log('############## error', error);
-      console.log('############## postSurveyResults', postSurveyResults)
+      // console.log('############## postSurveyResults', postSurveyResults)
       // console.log('############## response', response)
-      console.log('############## results body', body)
+      // console.log('############## results body', body)
       let surveyResultsRes = JSON.parse(body)
       // console.log('############## body.message_ts', surveyResultsRes.message_ts)
       timestamp = surveyResultsRes.ts;

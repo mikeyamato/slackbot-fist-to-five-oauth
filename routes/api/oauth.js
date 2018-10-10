@@ -212,7 +212,7 @@ function surveyToClass() {
       parsedJSON = JSON.parse(body);
       // console.log('############## parsedJSON.member', parsedJSON.members)
       channelMembers = parsedJSON.members;
-      // console.log('############## channel members', channelMembers)
+      console.log('############## channel members', channelMembers)
       
       // grab everyone's name but the person invoking the survey
       filteredMembers = channelMembers.filter(a => a !== pollRequestor);  // `a` is arbitrary

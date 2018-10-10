@@ -124,7 +124,7 @@ router.post('/', (req, res) => {
 	
 	// console.log('**** 1', req)
 	// console.log('**** req.body', req.body);
-	// console.log('**** requestType', requestType);
+	console.log('**** requestType', requestType);
 	
 	// reset variables
 	if(requestType.text === 'reset'){  
@@ -132,9 +132,8 @@ router.post('/', (req, res) => {
     console.log('**** channel id', channelId);
     pollRequestor = requestType.user_id;
     console.log('**** pollRequestor id', pollRequestor);
-    let jsonObj = JSON.parse(requestType)
-    username = jsonObj.user_name; 
-    console.log('**** user_name', user_name);
+    // username = requestType.user_name; 
+    // console.log('**** user_name', user_name);
 
 		fist = 0;
 		oneFinger = 0;

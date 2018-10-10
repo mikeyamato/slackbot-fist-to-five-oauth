@@ -591,7 +591,7 @@ function postSurvey(){
       
       if (error) throw new Error(error);
       console.log('############## error', error);
-      // console.log('############## postSurveyResults', postSurveyResults)
+      console.log('############## postSurveyResults', postSurveyResults)
       // console.log('############## response', response)
       console.log('############## results body', body)
       let surveyResultsRes = JSON.parse(body)

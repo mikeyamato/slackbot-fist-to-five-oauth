@@ -296,9 +296,9 @@ function surveyToClass() {
               {
                 "fallback": "Message just confirming that polls have been sent to the class.",
                 "color": "#36a64f",
-                "title": "Bombs away! Fist-to-Five poll has been delivered to the channel.",
-                "text": "Hey ${username} don't go anywhere as you'll start seeing results posted here.",
-                "thumb_url": "https://i.imgur.com/isO0sQQ.jpg"
+                "title": "Bombs :bomb: away! The Fist-to-Five poll has been delivered to the channel.",
+                "text": "Hey _${username}_ don't go anywhere as you'll start seeing results posted here.",
+                "thumb_url": "https://i.imgur.com/BVgT3aS.png"
               }
             ]
           }`

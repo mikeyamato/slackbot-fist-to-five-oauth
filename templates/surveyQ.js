@@ -18,27 +18,27 @@ module.exports.attachments = [
 				"type": "select",
 				"options": [
 					{
-						"text": ":fist-zero: FIST  (Help, I'm lost)",
+						"text": ":fist-zero:  FIST  (Help, I'm lost)",
 						"value": "fist"
 					},
 					{
-						"text": ":fist-one: ONE  (I barely understand)",
+						"text": ":fist-one:  ONE  (I barely understand)",
 						"value": "one_finger"
 					},
 					{
-						"text": ":fist-two: TWO  (I'm starting to understand)",
+						"text": ":fist-two:  TWO  (I'm starting to understand)",
 						"value": "two_fingers"
 					},
 					{
-						"text": ":fist-three: THREE  (I get it)",
+						"text": ":fist-three:  THREE  (I get it)",
 						"value": "three_fingers"
 					},
 					{
-						"text": ":fist-four: FOUR  (I'm comfortable with the idea)",
+						"text": ":fist-four:  FOUR  (I'm comfortable with the idea)",
 						"value": "four_fingers"
 					},
 					{
-						"text": ":fist-five: FIVE  (I understand this 100%)",
+						"text": ":fist-five:  FIVE  (I understand this 100%)",
 						"value": "five_fingers"
 					},
 				],

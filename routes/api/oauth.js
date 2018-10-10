@@ -562,7 +562,7 @@ function postSurvey(){
       console.log('############## error', error);
       // console.log('############## postSurveyResultsUpdate', postSurveyResultsUpdate)
       // console.log('############## response', response)
-      // console.log('############## body', body)
+      console.log('############## updated results body', body)
       // let surveyResultsRes = JSON.parse(body)
       // console.log('############## body.message_ts', surveyResultsRes.message_ts)
       // timestamp = surveyResultsRes.message_ts;
@@ -593,7 +593,7 @@ function postSurvey(){
       console.log('############## error', error);
       // console.log('############## postSurveyResults', postSurveyResults)
       // console.log('############## response', response)
-      // console.log('############## body', body)
+      console.log('############## results body', body)
       let surveyResultsRes = JSON.parse(body)
       // console.log('############## body.message_ts', surveyResultsRes.message_ts)
       timestamp = surveyResultsRes.ts;

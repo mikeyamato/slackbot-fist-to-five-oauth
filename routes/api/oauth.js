@@ -19,7 +19,8 @@ let recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers
 let channelId = '';  // this will be used for the running the survey in the appropriate channel
 let accessToken = '';  // not to be cleared out
 let refreshToken = '';  // not to be cleared out
-// let channelMembers = [];
+let channelMembers = [];
+let filteredMembers = [];
 let pollRequestor = '';
 let username = '';
 
@@ -124,37 +125,33 @@ router.post('/', (req, res) => {
 	
 	// console.log('**** 1', req)
 	// console.log('**** req.body', req.body);
-	console.log('**** requestType', requestType);
+	// console.log('**** requestType', requestType);
 	
 	// reset variables
 	if(requestType.text === 'reset'){  
+    
+    // reseting most global variables
+    fist = 0;
+    oneFinger = 0;
+    twoFingers = 0;
+    threeFingers = 0;
+    fourFingers = 0;
+    fiveFingers = 0;
+    recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
+    // channelMembers = [];
+    timestamp = '';
+    channelId = '';  // this will be used for the running the survey in the appropriate channel
+    pollRequestor = '';
+    username = '';
+    channelMembers = [];
+    filteredMembers = [];
+
 		channelId = requestType.channel_id;
     console.log('**** channel id', channelId);
     pollRequestor = requestType.user_id;
     console.log('**** pollRequestor id', pollRequestor);
     username = requestType.user_name; 
     console.log('**** user_name', username);
-
-		fist = 0;
-		oneFinger = 0;
-		twoFingers = 0;
-		threeFingers = 0;
-		fourFingers = 0;
-		fiveFingers = 0;
-    recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
-    // channelMembers = [];
-    timestamp = '';
-
-		// console.log('**** resetting variables ****');
-		// console.log('**** fist', fist);
-		// console.log('**** oneFinger', oneFinger);
-		// console.log('**** twoFingers', twoFingers);
-		// console.log('**** threeFingers', threeFingers);
-		// console.log('**** fourFingers', fourFingers);
-		// console.log('**** fiveFingers', fiveFingers);
-		// console.log('**** recordSurvey', recordSurvey);
-		// console.log('**** channelId', channelId);
-		// console.log('*****************************');
 
 		res.status(200).send(
 			{
@@ -214,11 +211,11 @@ function surveyToClass() {
       // console.log('############## body parse', JSON.parse(body))
       parsedJSON = JSON.parse(body);
       // console.log('############## parsedJSON.member', parsedJSON.members)
-      let channelMembers = parsedJSON.members;
+      channelMembers = parsedJSON.members;
       // console.log('############## channel members', channelMembers)
       
       // grab everyone's name but the person invoking the survey
-      let filteredMembers = channelMembers.filter(a => a !== pollRequestor);  // `a` is arbitrary
+      filteredMembers = channelMembers.filter(a => a !== pollRequestor);  // `a` is arbitrary
       // channelMembers.splice(memberIndex,1)
       // console.log('############## updated channelMembers', channelMembers)
       

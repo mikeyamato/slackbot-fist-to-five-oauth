@@ -511,7 +511,40 @@ function postSurvey(){
 
 	const resultsTextPortion = '*Fist-to-Five Survey*';
 	const resultsTextPortionUpdate = '*Fist-to-Five Survey Updated*';
-	const resultsAttachmentsPortion = `[{"pretext": "Results...", "text": "fist: ${fist} \n one: ${oneFinger} \n two: ${twoFingers} \n three: ${threeFingers} \n four: ${fourFingers} \n five: ${fiveFingers}"}]`;
+	const resultsAttachmentsPortion = `[{"pretext": "Results...", 
+    "fields": [
+      {
+        "title":":fist-zero: FIST",
+        "value":"${fist}",
+        "short": true
+      },
+      {
+        "title":":fist-one: ONE",
+        "value":"${oneFinger}",
+        "short": true
+      },
+      {
+        "title":":fist-two: TWO",
+        "value":"${twoFingers}",
+        "short": true
+      },
+      {
+        "title":":fist-three: THREE",
+        "value":"${threeFingers}",
+        "short": true
+      },
+      {
+        "title":":fist-four: FOUR",
+        "value":"${fourFingers}",
+        "short": true
+      },
+      {
+        "title":":fist-five: FIVE",
+        "value":"${fiveFingers}",
+        "short": true
+      }
+    ]
+  }]`;
 
 	if(timestamp){
     /***** update response *****/

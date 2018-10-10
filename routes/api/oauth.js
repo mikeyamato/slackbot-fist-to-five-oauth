@@ -123,7 +123,7 @@ router.post('/', (req, res) => {
 	
 	// console.log('**** 1', req)
 	// console.log('**** req.body', req.body);
-	// console.log('**** requestType', requestType);
+	console.log('**** requestType', requestType);
 	
 	// reset variables
 	if(requestType.text === 'reset'){  
@@ -293,6 +293,31 @@ function surveyToClass() {
             "channel": "${channelId}",
             "user": "${pollRequestor}",
             "text": "Bombs away!",
+          }`
+        }
+
+        request(confirmMsg, function (error, response, body) {
+          
+          if (error) throw new Error(error);
+          console.log('############## error', error);
+          console.log('############## confirmMsg', confirmMsg)
+          // console.log('############## response', response)
+          console.log('############## body', body)
+          
+          return;
+        })
+      } else {  // NOTE: if msgSent = false 
+        const confirmMsg = {  
+          method: 'POST',
+          url: postEphemeralUrl,
+          headers: {
+            Authorization: 'Bearer ' + accessToken,
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+          body: `{  
+            "channel": "${channelId}",
+            "user": "${pollRequestor}",
+            "text": "Zoinks! \nSomething doesn't look right. \nTry resetting again. \n${singleFoodEmoji}"
           }`
         }
 
@@ -523,4 +548,4 @@ function postSurvey(){
 module.exports = router;
 
 // https://stackoverflow.com/questions/32327858/how-to-send-a-post-request-from-node-js-express
-
+// https://github.com/vuejs/vuex/issues/455

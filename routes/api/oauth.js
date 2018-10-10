@@ -22,6 +22,8 @@ let channelMembers = [];
 let filteredMembers = [];
 let pollRequestor = '';
 let username = '';
+let singleFoodEmoji = '';
+
 
 const oauthAccessUrl	= 'https://slack.com/api/oauth.access';
 const getConvMembersUrl	= 'https://slack.com/api/conversations.members';
@@ -124,7 +126,7 @@ function refreshAccessToken(){
 // post request
 // posting survey form on slack
 router.post('/', (req, res) => {
-	const singleFoodEmoji = foodEmoji[Math.floor(Math.random() * foodEmoji.length)];
+	singleFoodEmoji = foodEmoji[Math.floor(Math.random() * foodEmoji.length)];
 	const requestType = req.body || null;
 	
 	// console.log('**** 1', req)
@@ -149,6 +151,7 @@ router.post('/', (req, res) => {
     username = '';
     channelMembers = [];
     filteredMembers = [];
+    singleFoodEmoji = '';
 
 		channelId = requestType.channel_id;
     console.log('**** channel id', channelId);
@@ -411,7 +414,6 @@ function surveyToClass() {
 // posting survey form on slack
 router.post('/survey', (req, res) => {
 
-	const singleFoodEmoji = foodEmoji[Math.floor(Math.random() * foodEmoji.length)];
 	const survey = JSON.parse(req.body.payload);
 	const handGesture = survey.actions[0].selected_options[0].value;
 
@@ -509,29 +511,29 @@ router.post('/survey', (req, res) => {
 /****************************************/
 function postSurvey(){
 
-	const resultsTextPortion = '*Fist-to-Five Survey*';
-	const resultsTextPortionUpdate = '*Fist-to-Five Survey Updated*';
+  // const resultsTextPortion = '*Fist-to-Five Survey*';
+  // const resultsTextPortionUpdate = '*Fist-to-Five Survey Updated*';
 	const resultsAttachmentsPortion = `[{
+    "pretext": "*Fist-to-Five Survey Results...*", 
     "color": "#704a6c",
-    "pretext": "Fist-to-Five Survey Results...", 
     "fields": [
       {
-        "value":"Fist :fist-zero:: ${fist}"
+        "value":":fist-zero: Fist: ${fist}"
       },
       {
-        "value":"One :fist-one:: ${oneFinger}"
+        "value":":fist-one: One: ${oneFinger}"
       },
       {
-        "value":"Two :fist-two:: ${twoFingers}"
+        "value":":fist-two: Two: ${twoFingers}"
       },
       {
-        "value":"Three :fist-three:: ${threeFingers}"
+        "value":":fist-three: Three: ${threeFingers}"
       },
       {
-        "value":"Four :fist-four:: ${fourFingers}"
+        "value":":fist-four: Four: ${fourFingers}"
       },
       {
-        "value":"Five :fist-five:: ${fiveFingers}"
+        "value":":fist-five: Five: ${fiveFingers}"
       }
     ]
   }]`;
@@ -548,7 +550,8 @@ function postSurvey(){
       body: `{  
         "channel": "${channelId}",
         "ts": "${timestamp}",
-        "text": "${resultsTextPortionUpdate}",
+        "username": "Not a Bot",
+        "icon_emoji": ${singleFoodEmoji},
         "attachments": ${resultsAttachmentsPortion}
       }`
     }
@@ -578,7 +581,8 @@ function postSurvey(){
       },
       body: `{  
         "channel": "${channelId}",
-        "text": "${resultsTextPortion}",
+        "username": "Not a Bot",
+        "icon_emoji": ${singleFoodEmoji},
         "attachments": ${resultsAttachmentsPortion}
       }`
     }

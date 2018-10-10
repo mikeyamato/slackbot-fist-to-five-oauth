@@ -233,11 +233,15 @@ function surveyToClass() {
     
     const qTextPortion = JSON.stringify(surveyQ.text[0]);
     const qAttachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
+    
+    let promises = [];
     let msgSent = false;
-
+    
     // loop through users
     for (let person of filteredMembers){
+      
 
+      // TODO: use promise.all
       const postSurvey = {  // TODO: update `user`
         method: 'POST',
         url: postEphemeralUrl,
@@ -253,7 +257,7 @@ function surveyToClass() {
         }`
       }
 
-      request(postSurvey, function (error, response, body) {
+      promises.push(request(postSurvey, function (error, response, body) {
         
         if (error) throw new Error(error);
         console.log('############## error', error);
@@ -262,44 +266,78 @@ function surveyToClass() {
         // console.log('############## body', body)
         let postSurveyRes = JSON.parse(body);
         msgSent = postSurveyRes.ok;
-      })
+        console.log('############## msgSent', msgSent)
+      }))
     }
-    console.log('############## msgSent', msgSent)
-    return msgSent;
-  })
+    Promise.all(promises)
+    .then(() => {
+      console.log('******* this should hit 3rd');
+      console.log('############## 3rd msgSent',msgSent);
 
-  .then((msgSent) => {
-    console.log('******* this should hit 3rd');
-    console.log('############## 3rd msgSent',msgSent);
+      // send requestor a confirmation msg that the survey went out
+      if (msgSent){
+        const confirmMsg = {  
+          method: 'POST',
+          url: postEphemeralUrl,
+          headers: {
+            Authorization: 'Bearer ' + accessToken,
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+          body: `{  
+            "channel": "${channelId}",
+            "user": "${pollRequestor}",
+            "text": "Bombs away!",
+          }`
+        }
 
-    // send requestor a confirmation msg that the survey went out
-    if (msgSent){
-      const confirmMsg = {  
-        method: 'POST',
-        url: postEphemeralUrl,
-        headers: {
-          Authorization: 'Bearer ' + accessToken,
-          'Content-Type': 'application/json; charset=utf-8'
-        },
-        body: `{  
-          "channel": "${channelId}",
-          "user": "${pollRequestor}",
-          "text": "Bombs away!",
-        }`
+        request(confirmMsg, function (error, response, body) {
+          
+          if (error) throw new Error(error);
+          console.log('############## error', error);
+          console.log('############## confirmMsg', confirmMsg)
+          // console.log('############## response', response)
+          console.log('############## body', body)
+          
+          return;
+        })
       }
+    })
 
-      request(confirmMsg, function (error, response, body) {
-        
-        if (error) throw new Error(error);
-        console.log('############## error', error);
-        console.log('############## confirmMsg', confirmMsg)
-        // console.log('############## response', response)
-        console.log('############## body', body)
-        
-        return;
-      })
-    }
+
   })
+
+  // .then((msgSent) => {
+  //   console.log('******* this should hit 3rd');
+  //   console.log('############## 3rd msgSent',msgSent);
+
+  //   // send requestor a confirmation msg that the survey went out
+  //   if (msgSent){
+  //     const confirmMsg = {  
+  //       method: 'POST',
+  //       url: postEphemeralUrl,
+  //       headers: {
+  //         Authorization: 'Bearer ' + accessToken,
+  //         'Content-Type': 'application/json; charset=utf-8'
+  //       },
+  //       body: `{  
+  //         "channel": "${channelId}",
+  //         "user": "${pollRequestor}",
+  //         "text": "Bombs away!",
+  //       }`
+  //     }
+
+  //     request(confirmMsg, function (error, response, body) {
+        
+  //       if (error) throw new Error(error);
+  //       console.log('############## error', error);
+  //       console.log('############## confirmMsg', confirmMsg)
+  //       // console.log('############## response', response)
+  //       console.log('############## body', body)
+        
+  //       return;
+  //     })
+  //   }
+  // })
 }
       
 

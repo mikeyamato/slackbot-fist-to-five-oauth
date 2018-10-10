@@ -21,6 +21,7 @@ let accessToken = '';  // not to be cleared out
 let refreshToken = '';  // not to be cleared out
 // let channelMembers = [];
 let pollRequestor = '';
+let username = '';
 
 const oauthAccessUrl	= 'https://slack.com/api/oauth.access';
 const getConvMembersUrl	= 'https://slack.com/api/conversations.members';
@@ -123,14 +124,16 @@ router.post('/', (req, res) => {
 	
 	// console.log('**** 1', req)
 	// console.log('**** req.body', req.body);
-	console.log('**** requestType', requestType);
+	// console.log('**** requestType', requestType);
 	
 	// reset variables
 	if(requestType.text === 'reset'){  
 		channelId = requestType.channel_id;
     console.log('**** channel id', channelId);
     pollRequestor = requestType.user_id;
-    console.log('**** pollRequestor', pollRequestor);
+    console.log('**** pollRequestor id', pollRequestor);
+    username = requestType.user_name; 
+    console.log('**** user_name', user_name);
 
 		fist = 0;
 		oneFinger = 0;
@@ -210,9 +213,9 @@ function surveyToClass() {
       // console.log('############## body', body)
       // console.log('############## body parse', JSON.parse(body))
       parsedJSON = JSON.parse(body);
-      console.log('############## parsedJSON.member', parsedJSON.members)
+      // console.log('############## parsedJSON.member', parsedJSON.members)
       let channelMembers = parsedJSON.members;
-      console.log('############## channel members', channelMembers)
+      // console.log('############## channel members', channelMembers)
       
       // grab everyone's name but the person invoking the survey
       let filteredMembers = channelMembers.filter(a => a !== pollRequestor);  // `a` is arbitrary
@@ -292,7 +295,15 @@ function surveyToClass() {
           body: `{  
             "channel": "${channelId}",
             "user": "${pollRequestor}",
-            "text": "Bombs away!",
+            "attachments": [
+              {
+                "fallback": "Message just confirming that polls have been sent to the class.",
+                "color": "#36a64f",
+                "title": "Bombs away! Fist-to-Five poll has been delivered to the channel.",
+                "text": "Hey ${username} don't go anywhere as you'll start seeing results posted here.",
+                "thumb_url": "https://i.imgur.com/isO0sQQ.jpg"
+              }
+            ]
           }`
         }
 
@@ -317,7 +328,13 @@ function surveyToClass() {
           body: `{  
             "channel": "${channelId}",
             "user": "${pollRequestor}",
-            "text": "Zoinks! \nSomething doesn't look right. \nTry resetting again. \n${singleFoodEmoji}"
+            "attachments": [
+              {
+                "fallback": "Uh-oh something went wrong with your request. Try resetting.",
+                "color": "#ff0000",
+                "text": "Zoinks! \nSomething doesn't look right. \nTry resetting again. \n${singleFoodEmoji}"
+              }
+            ]
           }`
         }
 

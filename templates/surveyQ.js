@@ -34,7 +34,7 @@ module.exports.attachments = [
 						"value": "three_fingers"
 					},
 					{
-						"text": ":fist-four:  FOUR  (I'm comfortable with the idea)",
+						"text": ":fist-four:  FOUR  (I'm comfortable)",
 						"value": "four_fingers"
 					},
 					{

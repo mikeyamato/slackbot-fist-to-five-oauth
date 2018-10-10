@@ -239,37 +239,43 @@ function surveyToClass() {
     
     // loop through users
     for (let person of filteredMembers){
-      
+      promises.push(new Promise((resolve, reject) => {
 
-      // TODO: use promise.all
-      const postSurvey = {  // TODO: update `user`
-        method: 'POST',
-        url: postEphemeralUrl,
-        headers: {
-          Authorization: 'Bearer ' + accessToken,
-          'Content-Type': 'application/json; charset=utf-8'
-        },
-        body: `{  
-          "channel": "${channelId}",
-          "user": "${person}",
-          "text": ${qTextPortion},
-          "attachments": [${qAttachmentPortion}]
-        }`
-      }
+        // TODO: use promise.all
+        const postSurvey = {  // TODO: update `user`
+          method: 'POST',
+          url: postEphemeralUrl,
+          headers: {
+            Authorization: 'Bearer ' + accessToken,
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+          body: `{  
+            "channel": "${channelId}",
+            "user": "${person}",
+            "text": ${qTextPortion},
+            "attachments": [${qAttachmentPortion}]
+          }`
+        }
 
-      promises.push(request(postSurvey, function (error, response, body) {
-        
-        if (error) throw new Error(error);
-        console.log('############## error', error);
-        // console.log('############## postSurvey', postSurvey)
-        // console.log('############## response', response)
-        // console.log('############## body', body)
-        let postSurveyRes = JSON.parse(body);
-        msgSent = postSurveyRes.ok;
-        console.log('############## msgSent', msgSent)
+        request(postSurvey, function (error, response, body) {
+          
+          if (error) throw new Error(error);
+          console.log('############## error', error);
+          // console.log('############## postSurvey', postSurvey)
+          // console.log('############## response', response)
+          // console.log('############## body', body)
+          let postSurveyRes = JSON.parse(body);
+          msgSent = postSurveyRes.ok;
+          console.log('############## msgSent', msgSent)
+
+          resolve();
+          if (error)  {
+            reject(console.log(error));
+          };
+        })
       }))
     }
-    Promise.all(promises)
+    return Promise.all(promises)
     .then(() => {
       console.log('******* this should hit 3rd');
       console.log('############## 3rd msgSent',msgSent);

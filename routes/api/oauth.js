@@ -175,7 +175,7 @@ router.post('/', (req, res) => {
 	}
 
 	// hit this with initial slack command
-	if(requestType.command === '/fist-oauth' && requestType.text === ''){     // TODO: update path to correct one
+	if(requestType.command === '/fist-to-five' && requestType.text === ''){     
 
 		// send survey out
 		res.status(200).send(
@@ -330,7 +330,7 @@ function surveyToClass() {
           
           if (error) throw new Error(error);
           console.log('############## error', error);
-          console.log('############## confirmMsg', confirmMsg)
+          // console.log('############## confirmMsg', confirmMsg)
           // console.log('############## response', response)
           console.log('############## body', body)
           
@@ -372,39 +372,6 @@ function surveyToClass() {
 
 
   })
-
-  // .then((msgSent) => {
-  //   console.log('******* this should hit 3rd');
-  //   console.log('############## 3rd msgSent',msgSent);
-
-  //   // send requestor a confirmation msg that the survey went out
-  //   if (msgSent){
-  //     const confirmMsg = {  
-  //       method: 'POST',
-  //       url: postEphemeralUrl,
-  //       headers: {
-  //         Authorization: 'Bearer ' + accessToken,
-  //         'Content-Type': 'application/json; charset=utf-8'
-  //       },
-  //       body: `{  
-  //         "channel": "${channelId}",
-  //         "user": "${pollRequestor}",
-  //         "text": "Bombs away!",
-  //       }`
-  //     }
-
-  //     request(confirmMsg, function (error, response, body) {
-        
-  //       if (error) throw new Error(error);
-  //       console.log('############## error', error);
-  //       console.log('############## confirmMsg', confirmMsg)
-  //       // console.log('############## response', response)
-  //       console.log('############## body', body)
-        
-  //       return;
-  //     })
-  //   }
-  // })
 }
       
 

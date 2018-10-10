@@ -208,9 +208,9 @@ function surveyToClass() {
       // console.log('############## postSurvey', getConvMembers)
       // console.log('############## response', response)
       // console.log('############## body', body)
-      // console.log('############## body parse', JSON.parse(body))
+      console.log('############## body parse', JSON.parse(body))
       parsedJSON = JSON.parse(body);
-      // console.log('############## parsedJSON.member', parsedJSON.members)
+      console.log('############## parsedJSON.member', parsedJSON.members)
       channelMembers = parsedJSON.members;
       console.log('############## channel members', channelMembers)
       

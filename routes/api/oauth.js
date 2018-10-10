@@ -511,37 +511,27 @@ function postSurvey(){
 
 	const resultsTextPortion = '*Fist-to-Five Survey*';
 	const resultsTextPortionUpdate = '*Fist-to-Five Survey Updated*';
-	const resultsAttachmentsPortion = `[{"pretext": "Results...", 
+	const resultsAttachmentsPortion = `[{
+    "color": "#704a6c",
+    "pretext": "Fist-to-Five Survey Results...", 
     "fields": [
       {
-        "title":"FIST",
-        "value":":fist-zero: ${fist}",
-        "short": true
+        "value":"Fist :fist-zero:: ${fist}"
       },
       {
-        "title":"ONE",
-        "value":":fist-one: ${oneFinger}",
-        "short": true
+        "value":"One :fist-one:: ${oneFinger}"
       },
       {
-        "title":"TWO",
-        "value":":fist-two: ${twoFingers}",
-        "short": true
+        "value":"Two :fist-two:: ${twoFingers}"
       },
       {
-        "title":"THREE",
-        "value":":fist-three: ${threeFingers}",
-        "short": true
+        "value":"Three :fist-three:: ${threeFingers}"
       },
       {
-        "title":"FOUR",
-        "value":":fist-four: ${fourFingers}",
-        "short": true
+        "value":"Four :fist-four:: ${fourFingers}"
       },
       {
-        "title":"FIVE",
-        "value":":fist-five: ${fiveFingers}",
-        "short": true
+        "value":"Five :fist-five:: ${fiveFingers}"
       }
     ]
   }]`;
@@ -615,3 +605,4 @@ module.exports = router;
 
 // https://stackoverflow.com/questions/32327858/how-to-send-a-post-request-from-node-js-express
 // https://github.com/vuejs/vuex/issues/455
+// https://api.slack.com/docs/messages/builder

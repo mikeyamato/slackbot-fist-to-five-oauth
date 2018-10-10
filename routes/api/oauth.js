@@ -18,7 +18,6 @@ let timestamp = '';
 let recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};  // used to store names; default = inactive
 let channelId = '';  // this will be used for the running the survey in the appropriate channel
 let accessToken = '';  // not to be cleared out
-let refreshToken = '';  // not to be cleared out
 let channelMembers = [];
 let filteredMembers = [];
 let pollRequestor = '';
@@ -56,10 +55,8 @@ router.get('/slack/authorization', (req, res) => {
     // console.log('############### response.body:', response.body)
     // console.log('############### accessTokenJSON:', accessTokenJSON)
     // console.log('############### access token:', accessTokenJSON.access_token)
-    // console.log('############### refresh token:', accessTokenJSON.refresh_token)
     // console.log('############### expires in (seconds):', accessTokenJSON.expires_in)
     accessToken = accessTokenJSON.access_token;
-    refreshToken = accessTokenJSON.refresh_token;
     countdown(tokenExpireTime)
     
     res.status(200).redirect('/api/oauth/success');
@@ -83,19 +80,27 @@ function countdown(seconds){
 };
 
 function refreshAccessToken(){
-	/***** TODO: update with different token *****/
-    const slackClientId = '?client_id=' + slackTokenPath.slackClientId; 
-    const slackClientSecret = '&client_secret=' + slackTokenPath.slackClientSecret;    
-	/*****************************************************/
-  const slackGrantType = '&grant_type=refresh_token';
 
-  const postOauthRefreshAccess = {
-    url: oauthAccessUrl+slackClientId+slackClientSecret+slackGrantType+refreshToken,
+  /***** TODO: update with different token *****/
+  const slackClientId = slackTokenPath.slackClientId; 
+  const slackClientSecret = slackTokenPath.slackClientSecret; 
+  const slackRefreshToken = slackTokenPath.slackRefreshToken;    
+  /*****************************************************/
+
+  const postOauthRefreshAccess = { 
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    }
-  }
+    url: oauthAccessUrl,
+    qs: { 
+      client_id: slackClientId,
+      client_secret: slackClientSecret,
+      grant_type: 'refresh_token',
+      refresh_token: slackRefreshToken 
+    },
+    headers: { 
+      'Cache-Control': 'no-cache',
+      'Content-Type': 'application/x-www-form-urlencoded' 
+    } 
+  };
 
   request(postOauthRefreshAccess, function (error, response) {
     const accessTokenJSON = JSON.parse(response.body)
@@ -105,10 +110,9 @@ function refreshAccessToken(){
     // console.log('############### response.body:', response.body)
     // console.log('############### accessTokenJSON:', accessTokenJSON)
     // console.log('############### access token:', accessTokenJSON.access_token)
-    // console.log('############### refresh token:', accessTokenJSON.refresh_token)
     accessToken = accessTokenJSON.access_token;
-    refreshToken = accessTokenJSON.refresh_token;
-    console.log('############### refresh token:', accessTokenJSON.expires_in)
+    console.log('############### access refresh token:', accessToken)
+    console.log('############### token Expire Time:', tokenExpireTime)
     countdown(tokenExpireTime)
     
     return;
@@ -203,6 +207,7 @@ function surveyToClass() {
     request(getConvMembers, function (error, response, body) {
       let parsedJSON = {};
       
+      
       // if (error) throw new Error(error);
       console.log('############## error', error);
       // console.log('############## postSurvey', getConvMembers)
@@ -210,14 +215,22 @@ function surveyToClass() {
       // console.log('############## body', body)
       console.log('############## body parse', JSON.parse(body))
       parsedJSON = JSON.parse(body);
-      console.log('############## parsedJSON.member', parsedJSON.members)
-      channelMembers = parsedJSON.members;
-      console.log('############## channel members', channelMembers)
-      
-      // grab everyone's name but the person invoking the survey
-      filteredMembers = channelMembers.filter(a => a !== pollRequestor);  // `a` is arbitrary
-      // channelMembers.splice(memberIndex,1)
-      // console.log('############## updated channelMembers', channelMembers)
+
+      if (parsedJSON.error === 'invalid_auth' || parsedJSON.error === 'not_authed'){
+        refreshAccessToken();
+        console.log('############## try the slash command again');
+      } else {
+
+        console.log('############## parsedJSON.member', parsedJSON.members)
+        channelMembers = parsedJSON.members;
+        console.log('############## channel members', channelMembers)
+        
+        // grab everyone's name but the person invoking the survey
+        filteredMembers = channelMembers.filter(a => a !== pollRequestor);  // `a` is arbitrary
+        // channelMembers.splice(memberIndex,1)
+        // console.log('############## updated channelMembers', channelMembers)
+
+      }
       
       // return;
       resolve(filteredMembers);

@@ -1,5 +1,7 @@
 // https://api.slack.com/docs/interactive-message-field-guide
 
+// leave `value` as-is as it relates to how values are tallied 
+
 module.exports.text = [
 	"*What time is it? It's Fist-to-Five survey time! Yay!* :tada:"
 ]

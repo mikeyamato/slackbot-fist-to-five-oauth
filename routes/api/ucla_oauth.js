@@ -1,3 +1,6 @@
+// NOTE: UCLA uses 'user' tokens. More info can be found here:
+// https://api.slack.com/docs/token-types
+
 const express = require('express');
 const request = require('request');
 const router = express.Router();
@@ -8,135 +11,37 @@ const foodEmoji = require('../../assets/foodEmoji');
 
 const slackTokenPath = require('../../config/keys_prod');
 
-let fist = 0;
-let oneFinger = 0;
-let twoFingers = 0;
-let threeFingers = 0;
-let fourFingers = 0;
-let fiveFingers = 0;
-let timestamp = '';
+let fist = 0;  // used to tabulate poll responses
+let oneFinger = 0;  // used to tabulate poll responses
+let twoFingers = 0;  // used to tabulate poll responses
+let threeFingers = 0;  // used to tabulate poll responses
+let fourFingers = 0;  // used to tabulate poll responses
+let fiveFingers = 0;  // used to tabulate poll responses
+let timestamp = '';  // used to send message updates to the same post
 let recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};  // used to store names; default = inactive
-let channelId = '';  // this will be used for the running the survey in the appropriate channel
-let accessToken = slackTokenPath.uclaSlackAccessToken;  // not to be cleared out
-let channelMembers = [];
-let filteredMembers = [];
-let pollRequestor = '';
-let username = '';
-let singleFoodEmoji = '';
+let channelId = '';  // used to run the poll in the appropriate channel
+let accessToken = slackTokenPath.uclaSlackAccessToken;
+let channelMembers = [];  // all channel members
+let filteredMembers = [];  // all channel member less the person invoking the poll
+let pollRequestor = '';  // person invoking the poll
+let username = '';  // temporarily holds the username of the person invoking the poll
+let singleFoodEmoji = '';  // temporarily holds a random food emoji
 
-
-const oauthAccessUrl	= 'https://slack.com/api/oauth.access';
 const getConvMembersUrl	= 'https://slack.com/api/conversations.members';
 const postEphemeralUrl	= 'https://slack.com/api/chat.postEphemeral';
 const postMessageUrl = 'https://slack.com/api/chat.postMessage';
 const updateUrl = 'https://slack.com/api/chat.update';
 
-// router.get('/slack/authorization', (req, res) => {
-//   // console.log('****** hit')
-//   // console.log('******',req.query)
-//   // console.log('******',req.query.code)
 
-// 	/*****************************************************/
-//     const slackClientId = '?client_id=' + slackTokenPath.uclaSlackClientId;  // TODO: updated w/ correct token 
-//     const slackClientSecret = '&client_secret=' + slackTokenPath.uclaSlackClientSecret;  // TODO: updated w/ correct token    
-// 	/*****************************************************/
-// 	const slackCode = '&code=' + req.query.code;  
-  
-//   const postOauthAccess = {
-//     url: oauthAccessUrl+slackClientId+slackClientSecret+slackCode,
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/x-www-form-urlencoded',
-//     }
-//   }
-//   request(postOauthAccess, function (error, response) {
-//     const accessTokenJSON = JSON.parse(response.body)
-//     const tokenExpireTime = accessTokenJSON.expires_in
-//     // console.log('############### postOauthAccess', postOauthAccess);
-//     console.log('############### error:', error);
-//     // console.log('############### response.body:', response.body)
-//     // console.log('############### accessTokenJSON:', accessTokenJSON)
-//     // console.log('############### access token:', accessTokenJSON.access_token)
-//     // console.log('############### expires in (seconds):', accessTokenJSON.expires_in)
-//     accessToken = accessTokenJSON.access_token;
-//     countdown(tokenExpireTime)
-    
-//     res.status(200).redirect('/api/oauth/success');
-
-//     return;
-//   });
-
-// })
-
-router.get('/success', (req, res) => {
-  res.status(200).json({
-    msg: "authentication success!"
-  })
-})
-
-// // countdown to refresh access token 
-// function countdown(seconds){
-//   let milliseconds = seconds * 1000;
-//   setTimeout(refreshAccessToken, milliseconds);
-//   // console.log('***** milliseconds should be 3600000:', milliseconds);
-// };
-
-// function refreshAccessToken(){
-
-//   /***** TODO: update with different token *****/
-//   const slackClientId = slackTokenPath.uclaSlackClientId;  // TODO: updated w/ correct token 
-//   const slackClientSecret = slackTokenPath.uclaSlackClientSecret;  // TODO: updated w/ correct token 
-//   const slackRefreshToken = slackTokenPath.uclaSlackRefreshToken;  // TODO: updated w/ correct token  
-//   /*****************************************************/
-
-//   const postOauthRefreshAccess = { 
-//     method: 'POST',
-//     url: oauthAccessUrl,
-//     qs: { 
-//       client_id: slackClientId,
-//       client_secret: slackClientSecret,
-//       grant_type: 'refresh_token',
-//       refresh_token: slackRefreshToken 
-//     },
-//     headers: { 
-//       'Cache-Control': 'no-cache',
-//       'Content-Type': 'application/x-www-form-urlencoded' 
-//     } 
-//   };
-
-//   request(postOauthRefreshAccess, function (error, response) {
-//     const accessTokenJSON = JSON.parse(response.body)
-//     const tokenExpireTime = accessTokenJSON.expires_in
-//     // console.log('############### postOauthRefreshAccess', postOauthRefreshAccess);
-//     console.log('############### error:', error);
-//     // console.log('############### response.body:', response.body)
-//     // console.log('############### accessTokenJSON:', accessTokenJSON)
-//     // console.log('############### access token:', accessTokenJSON.access_token)
-//     accessToken = accessTokenJSON.access_token;
-//     console.log('############### access refresh token:', accessToken)
-//     console.log('############### token expires in (seconds):', tokenExpireTime)
-//     countdown(tokenExpireTime)
-    
-//     return;
-//   });
-// };
-
-
-
-// post request
-// posting survey form on slack
+// resetting variables and posting poll
 router.post('/', (req, res) => {
 	singleFoodEmoji = foodEmoji[Math.floor(Math.random() * foodEmoji.length)];
+	// console.log('**** req.body', req.body);
 	const requestType = req.body || null;
 	
-	// console.log('**** 1', req)
-	// console.log('**** req.body', req.body);
-	// console.log('**** requestType', requestType);
-	
-	// reset variables
+	// resetting variables
 	if(requestType.text === 'reset'){  
     
-    // reseting most global variables
     fist = 0;
     oneFinger = 0;
     twoFingers = 0;
@@ -144,27 +49,21 @@ router.post('/', (req, res) => {
     fourFingers = 0;
     fiveFingers = 0;
     recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
-    // channelMembers = [];
     timestamp = '';
-    channelId = '';  // this will be used for the running the survey in the appropriate channel
-    pollRequestor = '';
-    username = '';
+    channelId = '';  // TODO: reset since we store it below?
+    pollRequestor = '';  // TODO: reset since we store it below?
+    username = '';  // TODO: reset since we store it below?
     channelMembers = [];
     filteredMembers = [];
     singleFoodEmoji = '';
 
+    // TODO: remove if not needed
 		channelId = requestType.channel_id;
     console.log('**** channel id', channelId);
     pollRequestor = requestType.user_id;
     console.log('**** pollRequestor id', pollRequestor);
     username = requestType.user_name; 
     console.log('**** user_name', username);
-
-    // checks to see if value is assigned to the access token
-    if (accessToken === ''){
-      refreshAccessToken()
-      console.log('############### access token requested')
-    }
 
 		res.status(200).send(
 			{
@@ -174,12 +73,11 @@ router.post('/', (req, res) => {
 		return null;
 	}
 
-	// hit this with initial slack command
+	// posting poll
 	if(requestType.command === '/fist-to-five' && requestType.text === ''){     
 
-		// send survey out
-		res.status(200).send(
-			surveyToClass()
+    res.status(200).send(
+			surveyToClass()  // send poll out
 		)
 	} else {
 		res.status(200).send(
@@ -189,194 +87,6 @@ router.post('/', (req, res) => {
 		)
 	}
 })
-				
-/************************************************/
-
-function surveyToClass() {
-  
-  // let msgSent = false;
-  // TODO: async await on this. first grab people, then send out survey.
-  
-  new Promise((resolve, reject) => {
-    console.log('******* this should hit 1st');
-    
-    const getConvMembers = {
-      method: 'GET',
-      url: getConvMembersUrl,
-      qs: { 
-        channel: `${channelId}`, 
-        pretty: '1' 
-      },
-      headers: { 
-        Authorization: 'Bearer ' + accessToken,
-        'Content-Type': 'application/x-www-form-urlencoded' 
-      }
-    }
-    
-    request(getConvMembers, function (error, response, body) {
-      let parsedJSON = {};
-      
-      
-      // if (error) throw new Error(error);
-      console.log('############## error', error);
-      // console.log('############## postSurvey', getConvMembers)
-      // console.log('############## response', response)
-      // console.log('############## body', body)
-      // console.log('############## body parse', JSON.parse(body))
-      parsedJSON = JSON.parse(body);
-
-      if (parsedJSON.error === 'invalid_auth' || parsedJSON.error === 'not_authed'){
-        refreshAccessToken();
-        console.log('############## try the slash command again');
-      } else {
-
-        // console.log('############## parsedJSON.member', parsedJSON.members)
-        channelMembers = parsedJSON.members;
-        // console.log('############## channel members', channelMembers)
-        
-        // grab everyone's name but the person invoking the survey
-        filteredMembers = channelMembers.filter(a => a !== pollRequestor);  // `a` is arbitrary
-        // channelMembers.splice(memberIndex,1)
-        // console.log('############## updated channelMembers', channelMembers)
-
-      }
-      
-      // return;
-      resolve(filteredMembers);
-      if (error)  {
-        reject(console.log(error));
-      };
-    })
-  })
-  
-  .then((filteredMembers) => {
-    console.log('******* this should hit 2nd');
-    console.log('############## 2nd filteredMembers',filteredMembers);
-    
-    const qTextPortion = JSON.stringify(surveyQ.text[0]);
-    const qAttachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
-    
-    let promises = [];
-    let msgSent = false;
-    
-    // loop through users
-    for (let person of filteredMembers){
-      promises.push(new Promise((resolve, reject) => {
-
-        // TODO: use promise.all
-        const postSurvey = {  // TODO: update `user`
-          method: 'POST',
-          url: postEphemeralUrl,
-          headers: {
-            Authorization: 'Bearer ' + accessToken,
-            'Content-Type': 'application/json; charset=utf-8'
-          },
-          body: `{  
-            "channel": "${channelId}",
-            "user": "${person}",
-            "text": ${qTextPortion},
-            "attachments": [${qAttachmentPortion}]
-          }`
-        }
-
-        request(postSurvey, function (error, response, body) {
-          
-          if (error) throw new Error(error);
-          console.log('############## error', error);
-          // console.log('############## postSurvey', postSurvey)
-          // console.log('############## response', response)
-          // console.log('############## body', body)
-          let postSurveyRes = JSON.parse(body);
-          msgSent = postSurveyRes.ok;
-          console.log('############## msgSent', msgSent)
-
-          resolve();
-          if (error)  {
-            reject(console.log(error));
-          };
-        })
-      }))
-    }
-    return Promise.all(promises)
-    .then(() => {
-      console.log('******* this should hit 3rd');
-      console.log('############## 3rd msgSent',msgSent);
-
-      // send requestor a confirmation msg that the survey went out
-      if (msgSent){
-        const confirmMsg = {  
-          method: 'POST',
-          url: postEphemeralUrl,
-          headers: {
-            Authorization: 'Bearer ' + accessToken,
-            'Content-Type': 'application/json; charset=utf-8'
-          },
-          body: `{  
-            "channel": "${channelId}",
-            "user": "${pollRequestor}",
-            "attachments": [
-              {
-                "fallback": "Message just confirming that polls have been sent to the class.",
-                "color": "#36a64f",
-                "title": "Bombs away! :bomb: The Fist-to-Five poll has been delivered to the channel.",
-                "text": "Hey _${username}_, be sure to stick around as results will be posted to the channel shortly.",
-                "thumb_url": "https://i.imgur.com/BVgT3aS.png"
-              }
-            ]
-          }`
-        }
-
-        request(confirmMsg, function (error, response, body) {
-          
-          if (error) throw new Error(error);
-          console.log('############## error', error);
-          // console.log('############## confirmMsg', confirmMsg)
-          // console.log('############## response', response)
-          console.log('############## body', body)
-          
-          return;
-        })
-      } else {  // NOTE: if msgSent = false 
-        const confirmMsg = {  
-          method: 'POST',
-          url: postEphemeralUrl,
-          headers: {
-            Authorization: 'Bearer ' + accessToken,
-            'Content-Type': 'application/json; charset=utf-8'
-          },
-          body: `{  
-            "channel": "${channelId}",
-            "user": "${pollRequestor}",
-            "attachments": [
-              {
-                "fallback": "Uh-oh something went wrong with your request. Try resetting.",
-                "color": "#ff0000",
-                "text": "Zoinks! \nSomething doesn't look right. \nTry resetting again. \n${singleFoodEmoji}"
-              }
-            ]
-          }`
-        }
-
-        request(confirmMsg, function (error, response, body) {
-          
-          if (error) throw new Error(error);
-          console.log('############## error', error);
-          console.log('############## confirmMsg', confirmMsg)
-          // console.log('############## response', response)
-          console.log('############## body', body)
-          
-          return;
-        })
-      }
-    })
-
-
-  })
-}
-      
-
-
-/************************************************/
 
 // posting survey form on slack
 router.post('/survey', (req, res) => {
@@ -473,13 +183,163 @@ router.post('/survey', (req, res) => {
 	} 
 })
 
-/****************************************/
-/***** POST survey results to Slack *****/
-/****************************************/
+// function to send out poll to channel
+function surveyToClass() {
+
+  new Promise((resolve, reject) => {
+    // console.log('******* this should hit 1st');
+    
+    // grab the id of everyone within a channel the poll is to be placed
+    const getConvMembers = {
+      method: 'GET',
+      url: getConvMembersUrl,
+      qs: { 
+        channel: `${channelId}`, 
+        pretty: '1' 
+      },
+      headers: { 
+        Authorization: 'Bearer ' + accessToken,
+        'Content-Type': 'application/x-www-form-urlencoded' 
+      }
+    }
+    
+    request(getConvMembers, (error, response, body) => {
+      let parsedJSON = {};
+      
+      // console.log('############## error', error);
+      console.log('############## body', body)
+      parsedJSON = JSON.parse(body);
+      channelMembers = parsedJSON.members;
+
+      // grab everyone's name but the person invoking the survey
+      filteredMembers = channelMembers.filter(a => a !== pollRequestor);  // `a` is arbitrary
+      
+      resolve(filteredMembers);
+      if (error)  {
+        reject(console.log(error));
+      };
+    })
+  })
+  
+  .then((filteredMembers) => {
+    // console.log('******* this should hit 2nd');
+    
+    // grabs the questions from `surveyQ.js`
+    const qTextPortion = JSON.stringify(surveyQ.text[0]);
+    const qAttachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
+    
+    let promises = [];  // holds all promises created during the loop
+    let msgSent = false;
+    
+    // loop through `filteredMembers` and send out the poll
+    for (let person of filteredMembers){
+      promises.push(new Promise((resolve, reject) => {
+
+        const postSurvey = {  
+          method: 'POST',
+          url: postEphemeralUrl,
+          headers: {
+            Authorization: 'Bearer ' + accessToken,
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+          body: `{  
+            "channel": "${channelId}",
+            "user": "${person}",
+            "text": ${qTextPortion},
+            "attachments": [${qAttachmentPortion}]
+          }`
+        }
+
+        request(postSurvey, (error, response, body) => {
+          
+          if (error) throw new Error(error);
+          // console.log('############## error', error);
+          console.log('############## body', body)
+          let postSurveyRes = JSON.parse(body);
+          msgSent = postSurveyRes.ok;
+
+          resolve();
+          if (error)  {
+            reject(console.log(error));
+          };
+        })
+      }))
+    }
+    return Promise.all(promises)  // executes the promise once the loop is completed
+    .then(() => {
+      // console.log('******* this should hit 3rd');
+
+      // send poll requestor a confirmation msg that the survey went out
+      if (msgSent){
+        const confirmMsg = {  
+          method: 'POST',
+          url: postEphemeralUrl,
+          headers: {
+            Authorization: 'Bearer ' + accessToken,
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+          body: `{  
+            "channel": "${channelId}",
+            "user": "${pollRequestor}",
+            "attachments": [
+              {
+                "fallback": "Message just confirming that polls have been sent to the class.",
+                "color": "#36a64f",
+                "title": "Bombs away! :bomb: The Fist-to-Five poll has been delivered to the channel.",
+                "text": "Hey _${username}_, be sure to stick around as results will be posted to the channel shortly.",
+                "thumb_url": "https://i.imgur.com/BVgT3aS.png"
+              }
+            ]
+          }`
+        }
+
+        request(confirmMsg, (error, response, body) => {
+          
+          if (error) throw new Error(error);
+          // console.log('############## error', error);
+          console.log('############## body', body)
+          
+          return;
+        })
+      } else {  // if msgSent = false 
+        const confirmMsg = {  
+          method: 'POST',
+          url: postEphemeralUrl,
+          headers: {
+            Authorization: 'Bearer ' + accessToken,
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+          body: `{  
+            "channel": "${channelId}",
+            "user": "${pollRequestor}",
+            "attachments": [
+              {
+                "fallback": "Uh-oh something went wrong with your request. Try resetting.",
+                "color": "#ff0000",
+                "text": "Zoinks! \nSomething doesn't look right. \nTry resetting again. \n${singleFoodEmoji}"
+              }
+            ]
+          }`
+        }
+
+        request(confirmMsg, (error, response, body) => {
+          
+          if (error) throw new Error(error);
+          // console.log('############## error', error);
+          console.log('############## body', body)
+          
+          return;
+        })
+      }
+    })
+
+
+  })
+}
+
+// function to send out poll results to channel
 function postSurvey(){
 
-  // const resultsTextPortion = '*Fist-to-Five Survey*';
-  // const resultsTextPortionUpdate = '*Fist-to-Five Survey Updated*';
 	const resultsAttachmentsPortion = `[{
     "pretext": "*Fist-to-Five Survey Results...*", 
     "color": "#704a6c",
@@ -513,9 +373,9 @@ function postSurvey(){
   // "icon_emoji": "${singleFoodEmoji}",
   // ***************************************
 
+  /***** update POST of poll results *****/
 	if(timestamp){
-    /***** update response *****/
-    const postSurveyResultsUpdate = {  // TODO: update `user`
+    const postSurveyResultsUpdate = { 
       method: 'POST',
       url: updateUrl,
       headers: {
@@ -523,28 +383,25 @@ function postSurvey(){
         'Content-Type': 'application/json; charset=utf-8'
       },
       body: `{  
+        "as_user": "false",
+        "username": "Not a Bot",
+        "icon_emoji": "${singleFoodEmoji}",
         "channel": "${channelId}",
         "ts": "${timestamp}",
         "attachments": ${resultsAttachmentsPortion}
       }`
     }
 
-    request(postSurveyResultsUpdate, function (error, response, body) {
+    request(postSurveyResultsUpdate, (error, response, body) => {
       
       if (error) throw new Error(error);
-      console.log('############## error', error);
-      // console.log('############## postSurveyResultsUpdate', postSurveyResultsUpdate)
-      // console.log('############## response', response)
-      // console.log('############## updated results body', body)
-      // let surveyResultsRes = JSON.parse(body)
-      // console.log('############## body.message_ts', surveyResultsRes.message_ts)
-      // timestamp = surveyResultsRes.message_ts;
-      // console.log('############## timestamp', timestamp)
+      console.log('############## updated results body', body)
 
       return;
     });
-	} else {
-    /***** initial POST *****/
+  } 
+  /***** initial POST of poll results *****/
+  else {
     const postSurveyResults = {  
       method: 'POST',
       url: postMessageUrl,
@@ -553,28 +410,28 @@ function postSurvey(){
         'Content-Type': 'application/json; charset=utf-8'
       },
       body: `{  
+        "as_user": "false",
+        "username": "Not a Bot",
+        "icon_emoji": "${singleFoodEmoji}",
         "channel": "${channelId}",
         "attachments": ${resultsAttachmentsPortion}
       }`
     }
 
-    request(postSurveyResults, function (error, response, body) {
+    request(postSurveyResults, (error, response, body) => {
       
       if (error) throw new Error(error);
-      console.log('############## error', error);
-      // console.log('############## postSurveyResults', postSurveyResults)
-      // console.log('############## response', response)
-      // console.log('############## results body', body)
+      console.log('############## results body', body) 
       let surveyResultsRes = JSON.parse(body)
-      // console.log('############## body.message_ts', surveyResultsRes.message_ts)
-      timestamp = surveyResultsRes.ts;
-      // console.log('############## timestamp', timestamp)
+      // `timestamp` allows the same message be updated and not creating new posts
+      // everytime there is an update filling up the screen.
+      timestamp = surveyResultsRes.ts; 
 
       return;
     })
 	}
 }
-/****************************************/
+/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
 module.exports = router;
 

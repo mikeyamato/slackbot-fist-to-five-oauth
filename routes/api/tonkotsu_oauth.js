@@ -1,3 +1,7 @@
+// NOTE: Tonkotsu uses the now defunct 'workspace' refresh and access tokens.  
+// More info can be found here: 
+// https://api.slack.com/docs/token-types
+
 const express = require('express');
 const request = require('request');
 const router = express.Router();

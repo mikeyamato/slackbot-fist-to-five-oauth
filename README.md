@@ -10,7 +10,8 @@ To use, enter `/fist-to-five reset` from within a Slack channel to clear the mem
 
 While `ucla-oauth.js` makes use of OAuth, `tonkotsu-oauth.js` makes use of OAuth 2.0.
 
-![slack-oauth](https://a.slack-edge.com/bfaba/img/api/slack_oauth_flow_diagram@2x.png)
+:.oauth
+![Slack OAuth 2.0 flow](https://a.slack-edge.com/bfaba/img/api/slack_oauth_flow_diagram@2x.png)
 
 ## Table of Contents
 

@@ -3,9 +3,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
+const appshopOauth = require('./routes/api/appshop_oauth');
 const tonkotsuOauth = require('./routes/api/tonkotsu_oauth');
 const uclaOauth = require('./routes/api/ucla_oauth');
-
 
 // Initialize an Express application
 const app = express();
@@ -14,8 +14,9 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 
-app.use('/api/ucla_oauth', uclaOauth)
+app.use('/api/appshop_oauth', appshopOauth)
 app.use('/api/tonkotsu_oauth', tonkotsuOauth)
+app.use('/api/ucla_oauth', uclaOauth)
 
 // server static assets if in production
 if(process.env.NODE_ENV === 'production'){

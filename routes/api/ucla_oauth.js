@@ -17,7 +17,7 @@ let fiveFingers = 0;
 let timestamp = '';
 let recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};  // used to store names; default = inactive
 let channelId = '';  // this will be used for the running the survey in the appropriate channel
-let accessToken = '';  // not to be cleared out
+let accessToken = slackTokenPath.uclaSlackAccessToken;  // not to be cleared out
 let channelMembers = [];
 let filteredMembers = [];
 let pollRequestor = '';
@@ -31,42 +31,42 @@ const postEphemeralUrl	= 'https://slack.com/api/chat.postEphemeral';
 const postMessageUrl = 'https://slack.com/api/chat.postMessage';
 const updateUrl = 'https://slack.com/api/chat.update';
 
-router.get('/slack/authorization', (req, res) => {
-  // console.log('****** hit')
-  // console.log('******',req.query)
-  // console.log('******',req.query.code)
+// router.get('/slack/authorization', (req, res) => {
+//   // console.log('****** hit')
+//   // console.log('******',req.query)
+//   // console.log('******',req.query.code)
 
-	/*****************************************************/
-    const slackClientId = '?client_id=' + slackTokenPath.uclaSlackClientId;  // TODO: updated w/ correct token 
-    const slackClientSecret = '&client_secret=' + slackTokenPath.uclaSlackClientSecret;  // TODO: updated w/ correct token    
-	/*****************************************************/
-	const slackCode = '&code=' + req.query.code;  
+// 	/*****************************************************/
+//     const slackClientId = '?client_id=' + slackTokenPath.uclaSlackClientId;  // TODO: updated w/ correct token 
+//     const slackClientSecret = '&client_secret=' + slackTokenPath.uclaSlackClientSecret;  // TODO: updated w/ correct token    
+// 	/*****************************************************/
+// 	const slackCode = '&code=' + req.query.code;  
   
-  const postOauthAccess = {
-    url: oauthAccessUrl+slackClientId+slackClientSecret+slackCode,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    }
-  }
-  request(postOauthAccess, function (error, response) {
-    const accessTokenJSON = JSON.parse(response.body)
-    const tokenExpireTime = accessTokenJSON.expires_in
-    // console.log('############### postOauthAccess', postOauthAccess);
-    console.log('############### error:', error);
-    // console.log('############### response.body:', response.body)
-    // console.log('############### accessTokenJSON:', accessTokenJSON)
-    // console.log('############### access token:', accessTokenJSON.access_token)
-    // console.log('############### expires in (seconds):', accessTokenJSON.expires_in)
-    accessToken = accessTokenJSON.access_token;
-    countdown(tokenExpireTime)
+//   const postOauthAccess = {
+//     url: oauthAccessUrl+slackClientId+slackClientSecret+slackCode,
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/x-www-form-urlencoded',
+//     }
+//   }
+//   request(postOauthAccess, function (error, response) {
+//     const accessTokenJSON = JSON.parse(response.body)
+//     const tokenExpireTime = accessTokenJSON.expires_in
+//     // console.log('############### postOauthAccess', postOauthAccess);
+//     console.log('############### error:', error);
+//     // console.log('############### response.body:', response.body)
+//     // console.log('############### accessTokenJSON:', accessTokenJSON)
+//     // console.log('############### access token:', accessTokenJSON.access_token)
+//     // console.log('############### expires in (seconds):', accessTokenJSON.expires_in)
+//     accessToken = accessTokenJSON.access_token;
+//     countdown(tokenExpireTime)
     
-    res.status(200).redirect('/api/oauth/success');
+//     res.status(200).redirect('/api/oauth/success');
 
-    return;
-  });
+//     return;
+//   });
 
-})
+// })
 
 router.get('/success', (req, res) => {
   res.status(200).json({
@@ -74,52 +74,52 @@ router.get('/success', (req, res) => {
   })
 })
 
-// countdown to refresh access token 
-function countdown(seconds){
-  let milliseconds = seconds * 1000;
-  setTimeout(refreshAccessToken, milliseconds);
-  // console.log('***** milliseconds should be 3600000:', milliseconds);
-};
+// // countdown to refresh access token 
+// function countdown(seconds){
+//   let milliseconds = seconds * 1000;
+//   setTimeout(refreshAccessToken, milliseconds);
+//   // console.log('***** milliseconds should be 3600000:', milliseconds);
+// };
 
-function refreshAccessToken(){
+// function refreshAccessToken(){
 
-  /***** TODO: update with different token *****/
-  const slackClientId = slackTokenPath.uclaSlackClientId;  // TODO: updated w/ correct token 
-  const slackClientSecret = slackTokenPath.uclaSlackClientSecret;  // TODO: updated w/ correct token 
-  const slackRefreshToken = slackTokenPath.uclaSlackRefreshToken;  // TODO: updated w/ correct token  
-  /*****************************************************/
+//   /***** TODO: update with different token *****/
+//   const slackClientId = slackTokenPath.uclaSlackClientId;  // TODO: updated w/ correct token 
+//   const slackClientSecret = slackTokenPath.uclaSlackClientSecret;  // TODO: updated w/ correct token 
+//   const slackRefreshToken = slackTokenPath.uclaSlackRefreshToken;  // TODO: updated w/ correct token  
+//   /*****************************************************/
 
-  const postOauthRefreshAccess = { 
-    method: 'POST',
-    url: oauthAccessUrl,
-    qs: { 
-      client_id: slackClientId,
-      client_secret: slackClientSecret,
-      grant_type: 'refresh_token',
-      refresh_token: slackRefreshToken 
-    },
-    headers: { 
-      'Cache-Control': 'no-cache',
-      'Content-Type': 'application/x-www-form-urlencoded' 
-    } 
-  };
+//   const postOauthRefreshAccess = { 
+//     method: 'POST',
+//     url: oauthAccessUrl,
+//     qs: { 
+//       client_id: slackClientId,
+//       client_secret: slackClientSecret,
+//       grant_type: 'refresh_token',
+//       refresh_token: slackRefreshToken 
+//     },
+//     headers: { 
+//       'Cache-Control': 'no-cache',
+//       'Content-Type': 'application/x-www-form-urlencoded' 
+//     } 
+//   };
 
-  request(postOauthRefreshAccess, function (error, response) {
-    const accessTokenJSON = JSON.parse(response.body)
-    const tokenExpireTime = accessTokenJSON.expires_in
-    // console.log('############### postOauthRefreshAccess', postOauthRefreshAccess);
-    console.log('############### error:', error);
-    // console.log('############### response.body:', response.body)
-    // console.log('############### accessTokenJSON:', accessTokenJSON)
-    // console.log('############### access token:', accessTokenJSON.access_token)
-    accessToken = accessTokenJSON.access_token;
-    console.log('############### access refresh token:', accessToken)
-    console.log('############### token expires in (seconds):', tokenExpireTime)
-    countdown(tokenExpireTime)
+//   request(postOauthRefreshAccess, function (error, response) {
+//     const accessTokenJSON = JSON.parse(response.body)
+//     const tokenExpireTime = accessTokenJSON.expires_in
+//     // console.log('############### postOauthRefreshAccess', postOauthRefreshAccess);
+//     console.log('############### error:', error);
+//     // console.log('############### response.body:', response.body)
+//     // console.log('############### accessTokenJSON:', accessTokenJSON)
+//     // console.log('############### access token:', accessTokenJSON.access_token)
+//     accessToken = accessTokenJSON.access_token;
+//     console.log('############### access refresh token:', accessToken)
+//     console.log('############### token expires in (seconds):', tokenExpireTime)
+//     countdown(tokenExpireTime)
     
-    return;
-  });
-};
+//     return;
+//   });
+// };
 
 
 

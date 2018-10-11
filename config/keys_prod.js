@@ -1,5 +1,5 @@
 module.exports = {
-	// Tonkotsu-Ramen
+	// Tonkotsu
 	tonkotsuSlackRefreshToken: process.env.TONKOTSU_SLACK_REFRESH_TOKEN,
 	tonkotsuSlackClientId: process.env.TONKOTSU_SLACK_CLIENT_ID,
 	tonkotsuSlackClientSecret: process.env.TONKOTSU_SLACK_CLIENT_SECRET,

@@ -50,19 +50,19 @@ router.post('/', (req, res) => {
     fiveFingers = 0;
     recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
     timestamp = '';
-    channelId = '';  // TODO: reset since we store it below?
-    pollRequestor = '';  // TODO: reset since we store it below?
-    username = '';  // TODO: reset since we store it below?
+    channelId = '';  
+    pollRequestor = '';  
+    username = '';  
     channelMembers = [];
     filteredMembers = [];
     singleFoodEmoji = '';
 
-    // TODO: remove if not needed
+    // grab information about the poll requestor
 		channelId = requestType.channel_id;
-    console.log('**** channel id', channelId);
     pollRequestor = requestType.user_id;
-    console.log('**** pollRequestor id', pollRequestor);
     username = requestType.user_name; 
+    console.log('**** channel id', channelId);
+    console.log('**** pollRequestor id', pollRequestor);
     console.log('**** user_name', username);
 
 		res.status(200).send(
@@ -340,6 +340,7 @@ function surveyToClass() {
 // function to send out poll results to channel
 function postSurvey(){
 
+  // NOTE: use of custom emojis. if not installed, they will not display properly.
 	const resultsAttachmentsPortion = `[{
     "pretext": "*Fist-to-Five Survey Results...*", 
     "color": "#704a6c",
@@ -364,14 +365,6 @@ function postSurvey(){
       }
     ]
   }]`;
-
-  // TODO: when switching away from workspace apps, include the following three
-  // arguments in the 'body' of both requests below
-  // ***************************************
-  // "as_user": "false",
-  // "username": "Not a Bot",
-  // "icon_emoji": "${singleFoodEmoji}",
-  // ***************************************
 
   /***** update POST of poll results *****/
 	if(timestamp){
@@ -431,7 +424,6 @@ function postSurvey(){
     })
 	}
 }
-/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
 module.exports = router;
 

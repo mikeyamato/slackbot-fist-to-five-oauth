@@ -12,21 +12,21 @@ const foodEmoji = require('../../assets/foodEmoji');
 
 const slackTokenPath = require('../../config/keys_prod');
 
-let fist = 0;
-let oneFinger = 0;
-let twoFingers = 0;
-let threeFingers = 0;
-let fourFingers = 0;
-let fiveFingers = 0;
-let timestamp = '';
+let fist = 0;  // used to tabulate poll responses
+let oneFinger = 0;  // used to tabulate poll responses
+let twoFingers = 0;  // used to tabulate poll responses
+let threeFingers = 0;  // used to tabulate poll responses
+let fourFingers = 0;  // used to tabulate poll responses
+let fiveFingers = 0;  // used to tabulate poll responses
+let timestamp = '';  // used to send message updates to the same post
 let recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};  // used to store names; default = inactive
 let channelId = '';  // this will be used for the running the survey in the appropriate channel
-let accessToken = '';  // not to be cleared out
-let channelMembers = [];
-let filteredMembers = [];
-let pollRequestor = '';
-let username = '';
-let singleFoodEmoji = '';
+let accessToken = '';  // TODO: update based on workgroup
+let channelMembers = [];  // all channel members
+let filteredMembers = [];  // all channel member less the person invoking the poll
+let pollRequestor = '';  // person invoking the poll
+let username = '';  // temporarily holds the username of the person invoking the poll
+let singleFoodEmoji = '';  // temporarily holds a random food emoji
 
 
 const oauthAccessUrl	= 'https://slack.com/api/oauth.access';
@@ -127,8 +127,7 @@ function refreshAccessToken(){
 
 
 
-// post request
-// posting survey form on slack
+// resetting variables and posting poll
 router.post('/', (req, res) => {
 	singleFoodEmoji = foodEmoji[Math.floor(Math.random() * foodEmoji.length)];
 	const requestType = req.body || null;
@@ -140,7 +139,6 @@ router.post('/', (req, res) => {
 	// reset variables
 	if(requestType.text === 'reset'){  
     
-    // reseting most global variables
     fist = 0;
     oneFinger = 0;
     twoFingers = 0;
@@ -157,11 +155,12 @@ router.post('/', (req, res) => {
     filteredMembers = [];
     singleFoodEmoji = '';
 
+    // grab information about the poll requestor
 		channelId = requestType.channel_id;
-    console.log('**** channel id', channelId);
     pollRequestor = requestType.user_id;
-    console.log('**** pollRequestor id', pollRequestor);
     username = requestType.user_name; 
+    console.log('**** channel id', channelId);
+    console.log('**** pollRequestor id', pollRequestor);
     console.log('**** user_name', username);
 
     // checks to see if value is assigned to the access token
@@ -178,12 +177,12 @@ router.post('/', (req, res) => {
 		return null;
 	}
 
-	// hit this with initial slack command
+	// posting poll
 	if(requestType.command === '/fist-to-five' && requestType.text === ''){     
 
 		// send survey out
 		res.status(200).send(
-			surveyToClass()
+			surveyToClass()  // send poll out
 		)
 	} else {
 		res.status(200).send(
@@ -194,16 +193,13 @@ router.post('/', (req, res) => {
 	}
 })
 				
-/************************************************/
-
+// function to send out poll to channel
 function surveyToClass() {
-  
-  // let msgSent = false;
-  // TODO: async await on this. first grab people, then send out survey.
   
   new Promise((resolve, reject) => {
     console.log('******* this should hit 1st');
     
+    // grab the id of everyone within a channel the poll is to be placed
     const getConvMembers = {
       method: 'GET',
       url: getConvMembersUrl,
@@ -240,8 +236,6 @@ function surveyToClass() {
         
         // grab everyone's name but the person invoking the survey
         filteredMembers = channelMembers.filter(a => a !== pollRequestor);  // `a` is arbitrary
-        // channelMembers.splice(memberIndex,1)
-        // console.log('############## updated channelMembers', channelMembers)
 
       }
       
@@ -252,7 +246,8 @@ function surveyToClass() {
       };
     })
   })
-  
+
+  // grabs the questions from `surveyQ.js`
   .then((filteredMembers) => {
     console.log('******* this should hit 2nd');
     console.log('############## 2nd filteredMembers',filteredMembers);
@@ -260,15 +255,14 @@ function surveyToClass() {
     const qTextPortion = JSON.stringify(surveyQ.text[0]);
     const qAttachmentPortion = JSON.stringify(surveyQ.attachments[0]);  // w/o `JSON.stringify`, error of `[object object]`
     
-    let promises = [];
+    let promises = [];  // holds all promises created during the loop
     let msgSent = false;
     
-    // loop through users
+    // loop through `filteredMembers` and send out the poll
     for (let person of filteredMembers){
       promises.push(new Promise((resolve, reject) => {
 
-        // TODO: use promise.all
-        const postSurvey = {  // TODO: update `user`
+        const postSurvey = {  
           method: 'POST',
           url: postEphemeralUrl,
           headers: {
@@ -301,7 +295,7 @@ function surveyToClass() {
         })
       }))
     }
-    return Promise.all(promises)
+    return Promise.all(promises)  // executes the promise once the loop is completed
     .then(() => {
       console.log('******* this should hit 3rd');
       console.log('############## 3rd msgSent',msgSent);
@@ -340,7 +334,7 @@ function surveyToClass() {
           
           return;
         })
-      } else {  // NOTE: if msgSent = false 
+      } else {  // if msgSent = false 
         const confirmMsg = {  
           method: 'POST',
           url: postEphemeralUrl,
@@ -380,7 +374,6 @@ function surveyToClass() {
       
 
 
-/************************************************/
 
 // posting survey form on slack
 router.post('/survey', (req, res) => {
@@ -477,13 +470,10 @@ router.post('/survey', (req, res) => {
 	} 
 })
 
-/****************************************/
-/***** POST survey results to Slack *****/
-/****************************************/
+// function to send out poll results to channel
 function postSurvey(){
 
-  // const resultsTextPortion = '*Fist-to-Five Survey*';
-  // const resultsTextPortionUpdate = '*Fist-to-Five Survey Updated*';
+  // NOTE: use of custom emojis. if not installed, they will not display properly.;
 	const resultsAttachmentsPortion = `[{
     "pretext": "*Fist-to-Five Survey Results...*", 
     "color": "#704a6c",
@@ -517,9 +507,9 @@ function postSurvey(){
   // "icon_emoji": "${singleFoodEmoji}",
   // ***************************************
 
+  /***** update POST of poll results *****/
 	if(timestamp){
-    /***** update response *****/
-    const postSurveyResultsUpdate = {  // TODO: update `user`
+    const postSurveyResultsUpdate = {  
       method: 'POST',
       url: updateUrl,
       headers: {
@@ -547,8 +537,9 @@ function postSurvey(){
 
       return;
     });
-	} else {
-    /***** initial POST *****/
+  }
+  /***** initial POST of poll results *****/
+  else {
     const postSurveyResults = {  
       method: 'POST',
       url: postMessageUrl,
@@ -572,13 +563,14 @@ function postSurvey(){
       let surveyResultsRes = JSON.parse(body)
       // console.log('############## body.message_ts', surveyResultsRes.message_ts)
       timestamp = surveyResultsRes.ts;
+      // `timestamp` allows the same message be updated and not creating new posts
+      // everytime there is an update filling up the screen.
       // console.log('############## timestamp', timestamp)
 
       return;
     })
 	}
 }
-/****************************************/
 
 module.exports = router;
 

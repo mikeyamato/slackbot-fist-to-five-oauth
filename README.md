@@ -46,8 +46,9 @@ To use this within your own Slack workspace the following elements will require 
 	* Basic Information. Fill in the App Name, Short Description and Background Color.
 	* Interactive Components. Turn this on. The Request URL should point back to your server with `/api/custom_name/survey` appended to the end. Swap `custom_name` with a name of your liking and update `server.js`  
 	<img src="./assets/screenshots/interactivity.png" alt="slack interactivity" width="60%"/>	
-	<img src="./assets/screenshots/routes.png" alt="routes" width="60%"/>
 	
+	<img src="./assets/screenshots/routes.png" alt="routes" width="60%"/>
+
 	* Unless you are planning on implementing this via
 
 ## Technology

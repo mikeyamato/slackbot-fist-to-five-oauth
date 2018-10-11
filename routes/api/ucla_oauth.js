@@ -270,6 +270,7 @@ function surveyToClass() {
       // console.log('******* this should hit 3rd');
 
       // send poll requestor a confirmation msg that the survey went out
+      // NOTE: to update `thumb_url` reference  https://api.slack.com/docs/message-attachments#thumb_url
       if (msgSent){
         const confirmMsg = {  
           method: 'POST',
@@ -340,7 +341,8 @@ function surveyToClass() {
 // function to send out poll results to channel
 function postSurvey(){
 
-  // NOTE: use of custom emojis. if not installed, they will not display properly.
+  // NOTE: use of custom emojis. if not installed, they will not display properly. 
+  // refer to '../../assets/'
 	const resultsAttachmentsPortion = `[{
     "pretext": "*Fist-to-Five Survey Results...*", 
     "color": "#704a6c",

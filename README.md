@@ -15,6 +15,7 @@ While `ucla-oauth.js` makes use of OAuth 1.0, `tonkotsu-oauth.js` makes use of O
 ## Table of Contents
 
 - [Installation](#installation)
+- [Implementation](#implementation)
 - [Technology](#technology)
 - [License](#license)
 
@@ -31,6 +32,15 @@ Set up within Slack is still required (i.e. slash command & interactive message)
 Note to self: command to view the log within Heroku is `heroku logs --source app` or `heroku logs --tail` (realtime). 
 
 <sub>Hosting on Heroku using the free tier may result in a slight response delay while the server spins up.</sub>
+
+## Implementation
+
+To use this within your own Slack workgroup the following elements will require attention:
+
+* Hosting. This application is hosted on Heroku on their [free tier](https://www.heroku.com/pricing). Feel free to continue using Heroku and any service of your liking.
+* Custom emojis. I've included the hand emojis used. They can be found [here](./assets/hand/).
+* Keys. Be sure to update the [keys](./config/keys_prod.js) accordingly. Be sure to update the `slackTokenPath` within the routes file (i.e. slackTokenPath.*uclaSlackAccessToken*) <img src="./assets/screenshots/token.png" alt="slack access token" width="600"/> 
+* Slack Integration. Create a [new app](https://api.slack.com/apps) 
 
 ## Technology
 

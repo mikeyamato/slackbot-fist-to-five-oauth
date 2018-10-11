@@ -36,9 +36,9 @@ router.get('/slack/authorization', (req, res) => {
   // console.log('******',req.query)
   // console.log('******',req.query.code)
 
-	/***** TODO: update with different token *****/
-    const slackClientId = '?client_id=' + slackTokenPath.slackClientId; 
-    const slackClientSecret = '&client_secret=' + slackTokenPath.slackClientSecret;    
+	/*****************************************************/
+    const slackClientId = '?client_id=' + slackTokenPath.TonkotsuSlackClientId;  // TODO: updated w/ correct token 
+    const slackClientSecret = '&client_secret=' + slackTokenPath.TonkotsuSlackClientSecret;  // TODO: updated w/ correct token    
 	/*****************************************************/
 	const slackCode = '&code=' + req.query.code;  
   
@@ -84,9 +84,9 @@ function countdown(seconds){
 function refreshAccessToken(){
 
   /***** TODO: update with different token *****/
-  const slackClientId = slackTokenPath.slackClientId; 
-  const slackClientSecret = slackTokenPath.slackClientSecret; 
-  const slackRefreshToken = slackTokenPath.slackRefreshToken;    
+  const slackClientId = slackTokenPath.TonkotsuSlackClientId;  // TODO: updated w/ correct token 
+  const slackClientSecret = slackTokenPath.TonkotsuSlackClientSecret;  // TODO: updated w/ correct token 
+  const slackRefreshToken = slackTokenPath.TonkotsuSlackRefreshToken;  // TODO: updated w/ correct token  
   /*****************************************************/
 
   const postOauthRefreshAccess = { 

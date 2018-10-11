@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const oauth = require('./routes/api/oauth');
+const oauth = require('./routes/api/tonkotsu_oauth');
 
 // Initialize an Express application
 const app = express();

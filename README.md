@@ -40,17 +40,20 @@ To use this within your own Slack workspace the following elements will require 
 * Hosting. This application is hosted on Heroku on their [free tier](https://www.heroku.com/pricing). Feel free to continue using Heroku and any service of your liking.
 * Custom emojis. The the hand emojis used can be found [here](./assets/hand/).
 * Keys. Be sure to update the [keys](./config/keys_prod.js) accordingly. Be sure to update the `slackTokenPath` within the routes file (i.e. slackTokenPath.*uclaSlackAccessToken*)
+
 <img src="./assets/screenshots/token.png" alt="slack access token" width="60%"/> 
 
 * Slack Integration. Create a [new app](https://api.slack.com/apps) and develop it in your Slack workspace.
 	* Basic Information. Fill in the App Name, Short Description and Background Color.
-	* Interactive Components. Turn this on. The Request URL should point back to your server with `/api/custom_name/survey` appended to the end. Swap `custom_name` with a name of your liking and update `server.js`  
-	
+	* Interactive Components. Turn this on. The Request URL should point back to your server with `/api/custom_name/survey` appended to the end. Swap `custom_name` with a name of your liking and update the route within `server.js`. 
+
 	<img src="./assets/screenshots/interactivity.png" alt="slack interactivity" width="60%"/>	
 
 	<img src="./assets/screenshots/routes.png" alt="routes" width="60%"/>
 
-	* Unless you are planning on implementing this via
+	* Slash Commands. Create a new command using `/fist-to-five`. The Request URL should point back to your server but with `/api/custom_name` appended to the end. The custom name used here should be the same in Interactive Components. Give your app a short description and any usage hint(s).
+	* OAuth Tokens & Redirect URLs. Include the following Scopes: `channels:read`, `chat:write:bot`, `chat:write:user`, `groups:read`, `im:read`, & `mpim:read`, `commands`. Then click the Install App to Workspace button to reveal your OAuth access token. Be sure to save the token to your server. 
+* Unless you are planning on implementing this via
 
 ## Technology
 

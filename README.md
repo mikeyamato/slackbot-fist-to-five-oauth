@@ -10,7 +10,7 @@ To use, enter `/fist-to-five reset` from within a Slack channel to clear the mem
 
 While `ucla-oauth.js` makes use of OAuth 1.0, `tonkotsu-oauth.js` makes use of OAuth 2.0.
 
-<img src="https://a.slack-edge.com/bfaba/img/api/slack_oauth_flow_diagram@2x.png" alt="Image of Slack OAuth 2.0 flow" width="600"/>
+<img src="https://a.slack-edge.com/bfaba/img/api/slack_oauth_flow_diagram@2x.png" alt="Image of Slack OAuth 2.0 flow" width="60%"/>
 
 ## Table of Contents
 
@@ -39,13 +39,10 @@ To use this within your own Slack workspace the following elements will require 
 
 * Hosting. This application is hosted on Heroku on their [free tier](https://www.heroku.com/pricing). Feel free to continue using Heroku and any service of your liking.
 * Custom emojis. The the hand emojis used can be found [here](./assets/hand/).
-* Keys. Be sure to update the [keys](./config/keys_prod.js) accordingly. Be sure to update the `slackTokenPath` within the routes file (i.e. slackTokenPath.*uclaSlackAccessToken*) 
-<img src="./assets/screenshots/token.png" alt="slack access token" width="60%"/> 
+* Keys. Be sure to update the [keys](./config/keys_prod.js) accordingly. Be sure to update the `slackTokenPath` within the routes file (i.e. slackTokenPath.*uclaSlackAccessToken*)	<img src="./assets/screenshots/token.png" alt="slack access token" width="60%"/> 
 * Slack Integration. Create a [new app](https://api.slack.com/apps) and develop it in your Slack workspace.
 	* Basic Information. Fill in the App Name, Short Description and Background Color.
-	* Interactive Components. Turn this on. The Request URL should point back to your server with `/api/custom_name/survey` appended to the end. Swap `custom_name` with a name of your liking and update `server.js` 
-	<img src="./assets/screenshots/interactivity.png" alt="slack interactivity" width="60%"/> 
-	<img src="./assets/screenshots/routes.png" alt="routes" width="60%"/>
+	* Interactive Components. Turn this on. The Request URL should point back to your server with `/api/custom_name/survey` appended to the end. Swap `custom_name` with a name of your liking and update `server.js`	<img src="./assets/screenshots/interactivity.png" alt="slack interactivity" width="60%"/>	<img src="./assets/screenshots/routes.png" alt="routes" width="60%"/>
 	* Unless you are planning on implementing this via
 
 ## Technology

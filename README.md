@@ -8,7 +8,7 @@ Do note that `tonkotsu-oauth.js` makes use of [workspace tokens](https://api.sla
 
 To use, enter `/fist-to-five reset` from within a Slack channel to clear the memory. Then enter, `/fist-to-five` to poll a class. Poll results will be delivered to everyone and continually updated in realtime.
 
-While `ucla-oauth.js` makes use of OAuth, `tonkotsu-oauth.js` makes use of OAuth 2.0.
+While `ucla-oauth.js` makes use of OAuth 1.0, `tonkotsu-oauth.js` makes use of OAuth 2.0.
 
 <img src="https://a.slack-edge.com/bfaba/img/api/slack_oauth_flow_diagram@2x.png" alt="Image of Slack OAuth 2.0 flow" width="600"/>
 

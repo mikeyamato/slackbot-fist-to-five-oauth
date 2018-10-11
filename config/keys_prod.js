@@ -11,5 +11,12 @@ module.exports = {
 	uclaSlackClientSecret: process.env.UCLA_SLACK_CLIENT_SECRET,
 	uclaSlackSigningSecret: process.env.UCLA_SLACK_SIGNING_SECRET,
 	uclaSlackVerificationToken: process.env.UCLA_SLACK_VERIFICATION_TOKEN,
-	uclaSlackAccessToken: process.env.UCLA_SLACK_ACCESS_TOKEN
+	uclaSlackAccessToken: process.env.UCLA_SLACK_ACCESS_TOKEN,
+
+	// Appshop
+	appshopSlackClientId: process.env.APPSHOP_SLACK_CLIENT_ID,
+	appshopSlackClientSecret: process.env.APPSHOP_SLACK_CLIENT_SECRET,
+	appshopSlackSigningSecret: process.env.APPSHOP_SLACK_SIGNING_SECRET,
+	appshopSlackVerificationToken: process.env.APPSHOP_SLACK_VERIFICATION_TOKEN,
+	appshopSlackAccessToken: process.env.APPSHOP_SLACK_ACCESS_TOKEN
 };

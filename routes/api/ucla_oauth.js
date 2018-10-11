@@ -20,7 +20,7 @@ let fiveFingers = 0;  // used to tabulate poll responses
 let timestamp = '';  // used to send message updates to the same post
 let recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};  // used to store names; default = inactive
 let channelId = '';  // used to run the poll in the appropriate channel
-let accessToken = slackTokenPath.uclaSlackAccessToken;
+let accessToken = slackTokenPath.uclaSlackAccessToken;  // TODO: update based on workgroup
 let channelMembers = [];  // all channel members
 let filteredMembers = [];  // all channel member less the person invoking the poll
 let pollRequestor = '';  // person invoking the poll

@@ -1,15 +1,15 @@
 module.exports = {
 	// Tonkotsu-Ramen
-	TonkotsuSlackRefreshToken: process.env.TONKOTSU_SLACK_REFRESH_TOKEN,
-	TonkotsuSlackClientId: process.env.TONKOTSU_SLACK_CLIENT_ID,
-	TonkotsuSlackClientSecret: process.env.TONKOTSU_SLACK_CLIENT_SECRET,
-	TonkotsuSlackSigningSecret: process.env.TONKOTSU_SLACK_SIGNING_SECRET,
-	TonkotsuSlackVerificationToken: process.env.TONKOTSU_SLACK_VERIFICATION_TOKEN
+	tonkotsuSlackRefreshToken: process.env.TONKOTSU_SLACK_REFRESH_TOKEN,
+	tonkotsuSlackClientId: process.env.TONKOTSU_SLACK_CLIENT_ID,
+	tonkotsuSlackClientSecret: process.env.TONKOTSU_SLACK_CLIENT_SECRET,
+	tonkotsuSlackSigningSecret: process.env.TONKOTSU_SLACK_SIGNING_SECRET,
+	tonkotsuSlackVerificationToken: process.env.TONKOTSU_SLACK_VERIFICATION_TOKEN
 	
 	// UCLA
-	// UclaSlackRefreshToken: process.env.TONKOTSU_SLACK_REFRESH_TOKEN,
-	// UclaSlackClientId: process.env.TONKOTSU_SLACK_CLIENT_ID,
-	// UclaSlackClientSecret: process.env.TONKOTSU_SLACK_CLIENT_SECRET,
-	// UclaSlackSigningSecret: process.env.TONKOTSU_SLACK_SIGNING_SECRET,
-	// UclaSlackVerificationToken: process.env.TONKOTSU_SLACK_VERIFICATION_TOKEN
+	// uclaSlackClientId: process.env.UCLA_SLACK_CLIENT_ID,
+	// uclaSlackClientSecret: process.env.UCLA_SLACK_CLIENT_SECRET,
+	// uclaSlackSigningSecret: process.env.UCLA_SLACK_SIGNING_SECRET,
+	// uclaSlackVerificationToken: process.env.UCLA_SLACK_VERIFICATION_TOKEN,
+	// uclaSlackRefreshToken: process.env.UCLA_SLACK_ACCESS_TOKEN
 };

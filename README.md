@@ -2,6 +2,8 @@
 
 This application was created to anonymously poll student in class using the fist-to-five technique and a custom Slack slash command. 
 
+<img src="https://media.giphy.com/media/yNffnRFgaBtuDhllsT/giphy.gif" alt="fist-to-five demo" width="60%"/>
+
 The fist-to-five (a.k.a. fist-for-five) technique is used by agile software development teams to poll team members to help achieve consensus or see how well the team is absorbing a topic at hand. For our purpose, we are using it as the latter. Fist to five is similar to thumbs up, thumbs down or thumbs sideways.
 
 Do note that `tonkotsu-oauth.js` makes use of [workspace tokens](https://api.slack.com/docs/token-types#workspace) allowing for a higher level of security as tokens are valid for only 60 minutes. Unfortunately, Slack has stopped issuing any new workspace refresh tokens as this was exclusive to the developer preview community. Nevertheless, workspace refresh tokens are still valid and will continue to work. `ucla-oauth.js` makes use of [User tokens](https://api.slack.com/docs/token-types#user.)
@@ -11,8 +13,6 @@ To use, enter `/fist-to-five reset` from within a Slack channel to clear the mem
 While `ucla-oauth.js` makes use of OAuth 1.0, `tonkotsu-oauth.js` makes use of OAuth 2.0.
 
 <img src="https://a.slack-edge.com/bfaba/img/api/slack_oauth_flow_diagram@2x.png" alt="Image of Slack OAuth 2.0 flow" width="60%"/>
-
-<img src="https://media.giphy.com/media/9JjRSYVhnemjxhqJHw/giphy.gif" alt="fist-to-five demo" width="100%"/>
 
 I'm always open to suggestions on how to improve this app.
 

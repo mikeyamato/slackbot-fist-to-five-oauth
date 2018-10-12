@@ -1,4 +1,4 @@
-// NOTE: UCLA uses 'user' tokens. More info can be found here:
+// NOTE: this file uses 'user' tokens. More info can be found here:
 // https://api.slack.com/docs/token-types
 
 const express = require('express');
@@ -342,7 +342,7 @@ function surveyToClass() {
 function postSurvey(){
 
   // NOTE: use of custom emojis. if not installed, they will not display properly. 
-  // refer to '../../assets/'
+  // refer to '../../assets/'.
 	const resultsAttachmentsPortion = `[{
     "pretext": "*Fist-to-Five Survey Results...*", 
     "color": "#704a6c",
@@ -418,8 +418,8 @@ function postSurvey(){
       if (error) throw new Error(error);
       console.log('############## results body', body) 
       let surveyResultsRes = JSON.parse(body)
-      // `timestamp` allows the same message be updated and not creating new posts
-      // everytime there is an update filling up the screen.
+      // `timestamp` allows the same message be updated and not create new posts
+      // everytime there is an update.
       timestamp = surveyResultsRes.ts; 
 
       return;

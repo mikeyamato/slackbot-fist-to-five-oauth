@@ -1,4 +1,4 @@
-// NOTE: appshop uses 'user' tokens. More info can be found here:
+// NOTE: this file uses 'user' tokens. More info can be found here:
 // https://api.slack.com/docs/token-types
 
 const express = require('express');

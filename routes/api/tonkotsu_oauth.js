@@ -1,4 +1,4 @@
-// NOTE: Tonkotsu uses the now defunct 'workspace' refresh and access tokens.  
+// NOTE: this file uses the now defunct 'workspace' refresh and access tokens.  
 // More info can be found here: 
 // https://api.slack.com/docs/token-types
 
@@ -563,8 +563,8 @@ function postSurvey(){
       let surveyResultsRes = JSON.parse(body)
       // console.log('############## body.message_ts', surveyResultsRes.message_ts)
       timestamp = surveyResultsRes.ts;
-      // `timestamp` allows the same message be updated and not creating new posts
-      // everytime there is an update filling up the screen.
+      // `timestamp` allows the same message be updated and not create new posts
+      // everytime there is an update.
       // console.log('############## timestamp', timestamp)
 
       return;

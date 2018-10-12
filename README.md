@@ -4,13 +4,17 @@ This application was created to anonymously poll student in class using the fist
 
 The fist-to-five (a.k.a. fist-for-five) technique is used by agile software development teams to poll team members to help achieve consensus or see how well the team is absorbing a topic at hand. For our purpose, we are using it as the latter. Fist to five is similar to thumbs up, thumbs down or thumbs sideways.
 
-Do note that `tonkotsu-oauth.js` makes use of [workspace tokens](https://api.slack.com/docs/token-types#workspace) allowing for a higher level of security as tokens are valid for only 60 minutes. Unfortunately, Slack has stopped issuing any new workspace refresh tokens as this was exclusive to the developer preview community. Nevertheless, workspace access tokens are still valid and will continue to be valid for a while. `ucla-oauth.js` makes use of [User tokens](https://api.slack.com/docs/token-types#user.)
+Do note that `tonkotsu-oauth.js` makes use of [workspace tokens](https://api.slack.com/docs/token-types#workspace) allowing for a higher level of security as tokens are valid for only 60 minutes. Unfortunately, Slack has stopped issuing any new workspace refresh tokens as this was exclusive to the developer preview community. Nevertheless, workspace refresh tokens are still valid and will continue to work. `ucla-oauth.js` makes use of [User tokens](https://api.slack.com/docs/token-types#user.)
 
 To use, enter `/fist-to-five reset` from within a Slack channel to clear the memory. Then enter, `/fist-to-five` to poll a class. Poll results will be delivered to everyone and continually updated in realtime.
 
 While `ucla-oauth.js` makes use of OAuth 1.0, `tonkotsu-oauth.js` makes use of OAuth 2.0.
 
 <img src="https://a.slack-edge.com/bfaba/img/api/slack_oauth_flow_diagram@2x.png" alt="Image of Slack OAuth 2.0 flow" width="60%"/>
+
+<img src="https://media.giphy.com/media/9JjRSYVhnemjxhqJHw/giphy.gif" alt="fist-to-five demo" width="100%"/>
+
+I'm always open to suggestions on how to improve this app.
 
 ## Table of Contents
 
@@ -29,20 +33,15 @@ $ nodemon server.js
 ```
 Set up within Slack is still required (i.e. slash command & interactive message).
 
-Note to self: command to view the log within Heroku is `heroku logs --source app` or `heroku logs --tail` (realtime). 
+Hosting on Heroku using the free tier may result in a slight response delay while the server spins up.
 
-<sub>Hosting on Heroku using the free tier may result in a slight response delay while the server spins up.</sub>
+<sub>Note to self: command to view the log within Heroku is `heroku logs --source app` or `heroku logs --tail` (realtime).</sub>
 
 ## Implementation
 
 To use this within your own Slack workspace the following elements will require attention:
 
-* Hosting. This application is hosted on Heroku on their [free tier](https://www.heroku.com/pricing). Feel free to continue using Heroku and any service of your liking.
-* Custom emojis. The the hand emojis used can be found [here](./assets/hand/).
-* Keys. Be sure to update the [keys](./config/keys_prod.js) accordingly. Be sure to update the `slackTokenPath` within the routes file (i.e. slackTokenPath.*uclaSlackAccessToken*) as well.
-
-<img src="./assets/screenshots/token.png" alt="slack access token" width="60%"/> 
-
+* Hosting. This application is hosted on Heroku using their [free tier](https://www.heroku.com/pricing). Continue using Heroku or any hosting service of your liking.
 * Slack Integration. Create a [new app](https://api.slack.com/apps) and develop it in your Slack workspace.
 	* Basic Information. Fill in the App Name, Short Description and Background Color.
 	* Interactive Components. Turn this on. The Request URL should point back to your server with `/api/custom_name/survey` appended to the end. Swap `custom_name` with a name of your liking and update the route within `server.js`. 
@@ -51,11 +50,18 @@ To use this within your own Slack workspace the following elements will require 
 
 	<img src="./assets/screenshots/routes.png" alt="routes" width="60%"/>
 
-	* Slash Commands. Create a new command using `/fist-to-five`. The Request URL should point back to your server but with `/api/custom_name` appended to the end. The custom name used here should be the same in Interactive Components. Give your app a short description and any usage hint(s).
-	* OAuth Tokens & Redirect URLs. Include the following Scopes: `channels:read`, `chat:write:bot`, `chat:write:user`, `groups:read`, `im:read`, & `mpim:read`, `commands`. Then click the Install App to Workspace button to reveal your OAuth access token. Be sure to save the token to your server. 
-* `server.js`. Require your file into `server.js` and connect the route. Ignore/remove the code block inside the pink box. 
+	* Slash Commands. Create a new command using `/fist-to-five`. The Request URL should point back to your server but with `/api/custom_name` appended to the end. The custom name used here should be the same used in Interactive Components. Give your app a short description and any usage hint(s) (e.g. "Use `/fist-to-five reset` to reset app")
+	* OAuth Tokens & Redirect URLs. Include the following Scopes: `channels:read`, `chat:write:bot`, `chat:write:user`, `groups:read`, `im:read`, & `mpim:read`, `commands`. Then click the Install App to Workspace button to reveal your OAuth access token.  
+* Keys. Be sure to update the [keys](./config/keys_prod.js) accordingly and update the `slackTokenPath` within the routes file (i.e. slackTokenPath.*uclaSlackAccessToken*).
+
+<img src="./assets/screenshots/token.png" alt="slack access token" width="60%"/> 
+
+* [server.js](./server.js). Require your file into `server.js` and connect the route. Ignore/remove the code block inside the pink box. 
 
 <img src="./assets/screenshots/require.png" alt="slack interactivity" width="60%"/>
+
+* `thumb_url`. Within the routes file look for `thumb_url`. There are 3 occurences but only 1 requires updating. If you choose to include a thumbnail image with the message confirmation, update the path. Otherwise it can removed.
+* Custom emojis. The the hand emojis used can be found [here](./assets/hand/).
 
 ## Technology
 

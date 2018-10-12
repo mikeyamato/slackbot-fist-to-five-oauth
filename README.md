@@ -41,6 +41,7 @@ Hosting on Heroku using the free tier may result in a slight response delay whil
 
 To use this within your own Slack workspace the following elements will require attention:
 
+* Template. Best to use [ucla_oauth.js](./routes/api/ucla_oauth.js) as your starting template.
 * Hosting. This application is hosted on Heroku using their [free tier](https://www.heroku.com/pricing). Continue using Heroku or any hosting service of your liking.
 * Slack Integration. Create a [new app](https://api.slack.com/apps) and develop it in your Slack workspace.
 	* Basic Information. Fill in the App Name, Short Description and Background Color.

@@ -74,7 +74,35 @@ router.post('/', (req, res) => {
 	}
 
 	// posting poll
-	if(requestType.command === '/fist-to-five' && requestType.text === ''){     
+	if(requestType.command === '/fist-to-five' && requestType.text === ''){   
+      
+    setTimeout(()=>{
+      console.log("***** memory cleared"); 
+      fist = 0;
+      oneFinger = 0;
+      twoFingers = 0;
+      threeFingers = 0;
+      fourFingers = 0;
+      fiveFingers = 0;
+      recordSurvey = {"fist": [],"one_finger": [],"two_fingers": [],"three_fingers": [],"four_fingers": [],"five_fingers": []};
+      // channelMembers = [];
+      timestamp = '';
+      channelId = '';  // this will be used for the running the survey in the appropriate channel
+      pollRequestor = '';
+      username = '';
+      channelMembers = [];
+      filteredMembers = [];
+      singleFoodEmoji = '';
+  
+    }, 3000);
+
+    // grab information about the poll requestor
+		channelId = requestType.channel_id;
+    pollRequestor = requestType.user_id;
+    username = requestType.user_name; 
+    console.log('**** channel id', channelId);
+    console.log('**** pollRequestor id', pollRequestor);
+    console.log('**** user_name', username);
 
     res.status(200).send(
 			surveyToClass()  // send poll out

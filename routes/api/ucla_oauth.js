@@ -39,7 +39,9 @@ router.post('/', (req, res) => {
 	// console.log('**** req.body', req.body);
 	const requestType = req.body || null;
 	
-	// resetting variables
+  // resetting variables
+  // NOTE: resetting is no longer required as `setTimeout()` has been implemented.
+  // reset left in for legacy reasons. 
 	if(requestType.text === 'reset'){  
     
     fist = 0;
@@ -94,7 +96,7 @@ router.post('/', (req, res) => {
       filteredMembers = [];
       singleFoodEmoji = '';
   
-    }, 60000);
+    }, 600000);
 
     // grab information about the poll requestor
 		channelId = requestType.channel_id;

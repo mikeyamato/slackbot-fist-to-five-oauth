@@ -8,7 +8,7 @@ The fist-to-five (a.k.a. fist-for-five) technique is used by agile software deve
 
 Do note that `tonkotsu-oauth.js` makes use of [workspace tokens](https://api.slack.com/docs/token-types#workspace) allowing for a higher level of security as tokens are valid for only 60 minutes. Unfortunately, Slack has stopped issuing any new workspace refresh tokens as this was exclusive to the developer preview community. Nevertheless, workspace refresh tokens are still valid and will continue to work. `ucla-oauth.js` makes use of [User tokens](https://api.slack.com/docs/token-types#user.)
 
-To use, enter `/fist-to-five reset` from within a Slack channel to clear the memory. Then enter, `/fist-to-five` to poll a class. Poll results will be delivered to everyone and continually updated in realtime.
+To use, enter, `/fist-to-five` to poll a class. Poll results will be delivered to everyone and continually updated in realtime. Once invoked the application will automatically clear all memory after 10 minutes.
 
 While `ucla-oauth.js` makes use of OAuth 1.0, `tonkotsu-oauth.js` makes use of OAuth 2.0.
 
@@ -51,7 +51,7 @@ To use this within your own Slack workspace the following elements will require 
 
 	<img src="./assets/screenshots/routes.png" alt="routes" width="60%"/>
 
-	* Slash Commands. Create a new command using `/fist-to-five`. The Request URL should point back to your server but with `/api/custom_name` appended to the end. The custom name used here should be the same used in Interactive Components. Give your app a short description and any usage hint(s) (e.g. "Use `/fist-to-five reset` to reset app")
+	* Slash Commands. Create a new command using `/fist-to-five`. The Request URL should point back to your server but with `/api/custom_name` appended to the end. The custom name used here should be the same used in Interactive Components.
 	* OAuth Tokens & Redirect URLs. Include the following Scopes: `channels:read`, `chat:write:bot`, `chat:write:user`, `groups:read`, `im:read`, & `mpim:read`, `commands`. Then click the Install App to Workspace button to reveal your OAuth access token.  
 * Keys. Be sure to update the [keys](./config/keys_prod.js) accordingly and update the `slackTokenPath` within the routes file (i.e. slackTokenPath.*uclaSlackAccessToken*).
 

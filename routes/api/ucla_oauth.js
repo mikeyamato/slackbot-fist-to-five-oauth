@@ -75,7 +75,7 @@ router.post('/', (req, res) => {
 
 	// posting poll
 	if(requestType.command === '/fist-to-five' && requestType.text === ''){   
-      
+
     setTimeout(()=>{
       console.log("***** memory cleared"); 
       fist = 0;
@@ -94,7 +94,7 @@ router.post('/', (req, res) => {
       filteredMembers = [];
       singleFoodEmoji = '';
   
-    }, 3000);
+    }, 60000);
 
     // grab information about the poll requestor
 		channelId = requestType.channel_id;
